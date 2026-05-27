@@ -416,7 +416,7 @@ function calcTemp(){
     }
 
     const dT = inp.tAfter - inp.tBefore; // °C
-    const dP = 0.1 * dT; // psi per °C
+    const dP = -0.1 * dT; // psi per °C (+1°C ambient = -0.1 psi pressure adjustment)
     const corrected = [inp.pFL, inp.pFR, inp.pRL, inp.pRR].map(v=>round(v + dP,2)); // FL,FR,RL,RR
 
     // Update tyres
