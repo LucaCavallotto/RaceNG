@@ -476,7 +476,7 @@ function calcFuel() {
                 } else {
                     // Fill tank to 100% capacity (safeMaxLaps)
                     const stintLaps = safeMaxLaps;
-                    const stintFuel = round(stintLaps * fuelLapL * safetyFactor, 2);
+                    const stintFuel = tankL;
                     stints.push({
                         index: stintIndex,
                         laps: stintLaps,
@@ -797,7 +797,7 @@ function getFuelCopyText() {
                     remainingLaps = 0;
                 } else {
                     const stintLaps = safeMaxLaps;
-                    const stintFuel = stintLaps * inp.fuelLap * safetyFactor;
+                    const stintFuel = tankL;
                     stints.push({ index: stintIndex, laps: stintLaps, fuel: stintFuel, startLap: lapCounter + 1, endLap: lapCounter + stintLaps });
                     lapCounter += stintLaps;
                     remainingLaps -= stintLaps;
