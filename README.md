@@ -22,6 +22,13 @@ Calculate adjusted cold tyre pressures based on ambient weather shifts and brake
 - **Coupled Front & Rear Brake Ducts**: Adjusts tyre pressures based on brake duct sizing shifts before/after. Front brake ducts affect the front axle, and rear brake ducts affect the rear axle.
 - **Non-Linear Step Math**: Implements standard step shifts (`0.2 psi / step`) with specialized transition logic for the crucial step between `2` and `3` (`0.3 psi`).
 
+### Keyboard Controls & Hotkeys
+RaceTechAssistant supports direct keyboard shortcuts to streamline your strategy formulation:
+- **`Enter`**: Focus any input field and press `Enter` to instantly execute the calculation for the active panel.
+- **`R` / `r`**: Press to reset the active calculator tab and clear stored configuration fields.
+- **`C` / `c`**: Press to copy computed strategy or pressure targets directly to your clipboard (only when results are visible).
+- **Shortcut Safety**: Shortcuts dynamically ignore standard modifier key groups (e.g. `Cmd`, `Ctrl`, `Alt`, `Shift`) to prevent overriding native browser commands such as page reload (`Cmd+R` / `Ctrl+R`) and highlighted text copying (`Cmd+C` / `Ctrl+C`).
+
 ### Modern UI & Copy Tools
 - **Default View Optimization**: Defaults to **Normal Mode** upon initial load for rapid calculations, with seamless session storage persistence.
 - **5% Safety Margin Preset**: Automatically fills the safety margin fields to `5%` on first load and form resets to speed up inputs.
