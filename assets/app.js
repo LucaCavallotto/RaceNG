@@ -11,6 +11,22 @@ const showBlock = id => document.getElementById(id).style.display='block';
 const showResult=(id,html)=>{const el=document.getElementById(id); el.style.display='block'; el.innerHTML=html};
 const hideResult=id=>{const el=document.getElementById(id); el.style.display='none'; el.innerHTML=''};
 
+const calcBrakeDuctDelta = (before, after) => {
+    if (Number.isNaN(before) || Number.isNaN(after)) return 0;
+    let delta = 0;
+    const start = Math.min(before, after);
+    const end = Math.max(before, after);
+    const sign = after >= before ? 1 : -1;
+    for (let i = start; i < end; i++) {
+        if (i === 2) {
+            delta += 0.3; // step between 2 and 3
+        } else {
+            delta += 0.2; // all other steps
+        }
+    }
+    return sign * delta;
+};
+
 // Header title/desc per tab
 const pageTitle = document.getElementById('pageTitle');
 const pageDesc  = document.getElementById('pageDesc');
@@ -19,19 +35,15 @@ function setHeaderFor(tab){
     pageTitle.textContent = 'Fuel Calculator';
     pageDesc.textContent  = 'Enter race time and lap pace (or fixed laps), then Calculate. Use Pro for tank size, formation/cool-down laps, and mandatory pitstops.';
     } else if(tab==='tab-temp'){
-    pageTitle.textContent = 'Tyre Pressures — Temperature Change';
-    pageDesc.textContent  = 'Input current cold pressures and ambient before/after. We apply 0.1 psi per °C and preview corrected pressures vs target window.';
-    } else if(tab==='tab-brake'){
-    pageTitle.textContent = 'Tyre Pressures — Brake Duct Change';
-    pageDesc.textContent  = 'Enter current pressures and brake-duct settings before/after. We apply 0.2 psi per step to estimate new pressures.';
+    pageTitle.textContent = 'Tyre Pressures Calculator';
+    pageDesc.textContent  = 'Input current cold pressures and ambient temperature before/after, brake duct settings before/after, or both to estimate adjusted cold pressures.';
     }
 }
 
 // Tabs logic
 const tabs = [
     {btn:'tab-fuel', panel:'panel-fuel', col:'col-fuel'},
-    {btn:'tab-temp', panel:'panel-temp', col:'col-temp'},
-    {btn:'tab-brake', panel:'panel-brake', col:'col-brake'}
+    {btn:'tab-temp', panel:'panel-temp', col:'col-temp'}
 ];
 
 function activateTab(key){
@@ -83,7 +95,6 @@ proBtn.addEventListener('click', ()=>setMode('pro'));
 function saveInputsToStorage(){
     const inputs = readFuelInputs();
     const tempInputs = readTempInputs();
-    const brakeInputs = readBrakeInputs();
     const data = {
     raceH: inputs.raceH, raceM: inputs.raceM, lapM: inputs.lapM, lapS: inputs.lapS,
     fuelLap: inputs.fuelLap, lapsFixed: inputs.fixedLaps, safetyMargin: inputs.safetyMargin,
@@ -93,8 +104,8 @@ function saveInputsToStorage(){
     includeFormation: inputs.includeFormation, includeCooldown: inputs.includeCooldown,
     pFR: tempInputs.pFR, pFL: tempInputs.pFL, pRL: tempInputs.pRL, pRR: tempInputs.pRR,
     tBefore: tempInputs.tBefore, tAfter: tempInputs.tAfter,
-    bFR: brakeInputs.bFR, bFL: brakeInputs.bFL, bRL: brakeInputs.bRL, bRR: brakeInputs.bRR,
-    bdBefore: brakeInputs.bdBefore, bdAfter: brakeInputs.bdAfter
+    bdFBefore: tempInputs.bdFBefore, bdFAfter: tempInputs.bdFAfter,
+    bdRBefore: tempInputs.bdRBefore, bdRAfter: tempInputs.bdRAfter
     };
     Object.entries(data).forEach(([key, value]) => sessionStorage.setItem(`input_${key}`, value));
 }
@@ -104,7 +115,7 @@ function loadInputsFromStorage(){
     'raceH','raceM','lapsFixed','lapM','lapS','fuelLap','safetyMargin',
     'raceH_p','raceM_p','lapsFixed_p','lapM_p','lapS_p','fuelLap_p','tank_p','mandStops','safetyMargin_p',
     'pFR','pFL','pRL','pRR','tBefore','tAfter',
-    'bFR','bFL','bRL','bRR','bdBefore','bdAfter'
+    'bdFBefore','bdFAfter','bdRBefore','bdRAfter'
     ];
     fields.forEach(id => {
     const value = sessionStorage.getItem(`input_${id}`);
@@ -161,22 +172,44 @@ function validateTempInputs(){
     if (Number.isNaN(inp.pFL) || inp.pFL <= 0) errors.pFL = 'Must be positive';
     if (Number.isNaN(inp.pRL) || inp.pRL <= 0) errors.pRL = 'Must be positive';
     if (Number.isNaN(inp.pRR) || inp.pRR <= 0) errors.pRR = 'Must be positive';
-    if (Number.isNaN(inp.tBefore)) errors.tBefore = 'Must be a valid number';
-    if (Number.isNaN(inp.tAfter)) errors.tAfter = 'Must be a valid number';
 
-    return errors;
-}
+    const isFieldEmpty = id => document.getElementById(id).value.trim() === '';
+    const tBeforeEmpty = isFieldEmpty('tBefore');
+    const tAfterEmpty = isFieldEmpty('tAfter');
+    const bdFBeforeEmpty = isFieldEmpty('bdFBefore');
+    const bdFAfterEmpty = isFieldEmpty('bdFAfter');
+    const bdRBeforeEmpty = isFieldEmpty('bdRBefore');
+    const bdRAfterEmpty = isFieldEmpty('bdRAfter');
 
-function validateBrakeInputs(){
-    const inp = readBrakeInputs();
-    const errors = {};
+    if (!tBeforeEmpty || !tAfterEmpty) {
+        if (tBeforeEmpty) errors.tBefore = 'Must be filled';
+        else if (Number.isNaN(inp.tBefore)) errors.tBefore = 'Must be a valid number';
+        
+        if (tAfterEmpty) errors.tAfter = 'Must be filled';
+        else if (Number.isNaN(inp.tAfter)) errors.tAfter = 'Must be a valid number';
+    }
 
-    if (Number.isNaN(inp.bFR) || inp.bFR <= 0) errors.bFR = 'Must be positive';
-    if (Number.isNaN(inp.bFL) || inp.bFL <= 0) errors.bFL = 'Must be positive';
-    if (Number.isNaN(inp.bRL) || inp.bRL <= 0) errors.bRL = 'Must be positive';
-    if (Number.isNaN(inp.bRR) || inp.bRR <= 0) errors.bRR = 'Must be positive';
-    if (Number.isNaN(inp.bdBefore) || inp.bdBefore < 0) errors.bdBefore = 'Must be non-negative';
-    if (Number.isNaN(inp.bdAfter) || inp.bdAfter < 0) errors.bdAfter = 'Must be non-negative';
+    if (!bdFBeforeEmpty || !bdFAfterEmpty) {
+        if (bdFBeforeEmpty) errors.bdFBefore = 'Must be filled';
+        else if (Number.isNaN(inp.bdFBefore) || inp.bdFBefore < 0) errors.bdFBefore = 'Must be non-negative';
+        
+        if (bdFAfterEmpty) errors.bdFAfter = 'Must be filled';
+        else if (Number.isNaN(inp.bdFAfter) || inp.bdFAfter < 0) errors.bdFAfter = 'Must be non-negative';
+    }
+
+    if (!bdRBeforeEmpty || !bdRAfterEmpty) {
+        if (bdRBeforeEmpty) errors.bdRBefore = 'Must be filled';
+        else if (Number.isNaN(inp.bdRBefore) || inp.bdRBefore < 0) errors.bdRBefore = 'Must be non-negative';
+        
+        if (bdRAfterEmpty) errors.bdRAfter = 'Must be filled';
+        else if (Number.isNaN(inp.bdRAfter) || inp.bdRAfter < 0) errors.bdRAfter = 'Must be non-negative';
+    }
+
+    if (tBeforeEmpty && tAfterEmpty && bdFBeforeEmpty && bdFAfterEmpty && bdRBeforeEmpty && bdRAfterEmpty) {
+        errors.tBefore = 'Provide Temp or BD change';
+        errors.bdFBefore = 'Provide Temp or BD change';
+        errors.bdRBefore = 'Provide Temp or BD change';
+    }
 
     return errors;
 }
@@ -207,7 +240,7 @@ function updateInputErrors(){
     document.getElementById('btnFuel').disabled = Object.keys(errors).length > 0;
     } else if (activeTab === 'tab-temp') {
     errors = validateTempInputs();
-    const fields = ['pFR','pFL','pRL','pRR','tBefore','tAfter'];
+    const fields = ['pFR','pFL','pRL','pRR','tBefore','tAfter','bdFBefore','bdFAfter','bdRBefore','bdRAfter'];
     fields.forEach(id => {
         const input = document.getElementById(id);
         const errorEl = document.getElementById(`error-${id}`);
@@ -222,23 +255,6 @@ function updateInputErrors(){
         }
     });
     document.getElementById('btnTemp').disabled = Object.keys(errors).length > 0;
-    } else if (activeTab === 'tab-brake') {
-    errors = validateBrakeInputs();
-    const fields = ['bFR','bFL','bRL','bRR','bdBefore','bdAfter'];
-    fields.forEach(id => {
-        const input = document.getElementById(id);
-        const errorEl = document.getElementById(`error-${id}`);
-        if (errors[id]) {
-        input.parentElement.classList.add('input-error');
-        errorEl.textContent = errors[id];
-        errorEl.classList.add('show');
-        } else {
-        input.parentElement.classList.remove('input-error');
-        errorEl.textContent = '';
-        errorEl.classList.remove('show');
-        }
-    });
-    document.getElementById('btnBrake').disabled = Object.keys(errors).length > 0;
     }
 }
 
@@ -265,17 +281,15 @@ function readFuelInputs(){
 
 // Temp calc
 function readTempInputs(){
+    const getVal = id => {
+        const raw = document.getElementById(id).value;
+        return raw.trim() === '' ? NaN : parseFloat(raw);
+    };
     return {
     pFR: num('pFR'), pFL: num('pFL'), pRL: num('pRL'), pRR: num('pRR'),
-    tBefore: num('tBefore'), tAfter: num('tAfter')
-    };
-}
-
-// Brake calc
-function readBrakeInputs(){
-    return {
-    bFR: num('bFR'), bFL: num('bFL'), bRL: num('bRL'), bRR: num('bRR'),
-    bdBefore: num('bdBefore'), bdAfter: num('bdAfter')
+    tBefore: getVal('tBefore'), tAfter: getVal('tAfter'),
+    bdFBefore: getVal('bdFBefore'), bdFAfter: getVal('bdFAfter'),
+    bdRBefore: getVal('bdRBefore'), bdRAfter: getVal('bdRAfter')
     };
 }
 
@@ -409,45 +423,39 @@ function calcTemp(){
     return;
     }
 
-    const dT = inp.tAfter - inp.tBefore; // °C
-    const dP = -0.1 * dT; // psi per °C (+1°C ambient = -0.1 psi pressure adjustment)
-    const corrected = [inp.pFL, inp.pFR, inp.pRL, inp.pRR].map(v=>round(v + dP,2)); // FL,FR,RL,RR
+    // 1. Temp adjustment
+    let dP_temp = 0;
+    if (!Number.isNaN(inp.tBefore) && !Number.isNaN(inp.tAfter)) {
+        const dT = inp.tAfter - inp.tBefore;
+        dP_temp = -0.1 * dT;
+    }
+
+    // 2. Front Brake duct adjustment
+    let dP_bdF = 0;
+    if (!Number.isNaN(inp.bdFBefore) && !Number.isNaN(inp.bdFAfter)) {
+        dP_bdF = calcBrakeDuctDelta(inp.bdFBefore, inp.bdFAfter);
+    }
+
+    // 3. Rear Brake duct adjustment
+    let dP_bdR = 0;
+    if (!Number.isNaN(inp.bdRBefore) && !Number.isNaN(inp.bdRAfter)) {
+        dP_bdR = calcBrakeDuctDelta(inp.bdRBefore, inp.bdRAfter);
+    }
+
+    const correctedFL = round(inp.pFL + dP_temp + dP_bdF, 2);
+    const correctedFR = round(inp.pFR + dP_temp + dP_bdF, 2);
+    const correctedRL = round(inp.pRL + dP_temp + dP_bdR, 2);
+    const correctedRR = round(inp.pRR + dP_temp + dP_bdR, 2);
 
     // Update tyres
-    document.getElementById('tp-fl').textContent = corrected[0];
-    document.getElementById('tp-fr').textContent = corrected[1];
-    document.getElementById('tp-rl').textContent = corrected[2];
-    document.getElementById('tp-rr').textContent = corrected[3];
+    document.getElementById('tp-fl').textContent = correctedFL.toFixed(2);
+    document.getElementById('tp-fr').textContent = correctedFR.toFixed(2);
+    document.getElementById('tp-rl').textContent = correctedRL.toFixed(2);
+    document.getElementById('tp-rr').textContent = correctedRR.toFixed(2);
 
     hideResult('outTemp');
     showGrid('temp-wrap');
     showGrid('temp-tyre-grid');
-}
-
-// Brake ducts → Pressure
-function calcBrake(){
-    const inp = readBrakeInputs();
-
-    // Should be validated by button disable, but double-check
-    const errors = validateBrakeInputs();
-    if (Object.keys(errors).length > 0){
-    hide('brake-wrap');
-    showResult('outBrake','❌ <span class="err">Please correct invalid inputs.</span>');
-    return;
-    }
-
-    const dBD = inp.bdAfter - inp.bdBefore;
-    const dP = 0.2 * dBD;
-
-    const corrected = [inp.bFR, inp.bFL, inp.bRL, inp.bRR].map(v=>round(v + dP,2));
-    document.getElementById('bd-fr').textContent = corrected[0];
-    document.getElementById('bd-fl').textContent = corrected[1];
-    document.getElementById('bd-rl').textContent = corrected[2];
-    document.getElementById('bd-rr').textContent = corrected[3];
-
-    hideResult('outBrake');
-    showGrid('brake-wrap');
-    showGrid('brake-tyre-grid');
 }
 
 // Attach input listeners for validation and storage
@@ -456,7 +464,7 @@ const inputIds = [
     'raceH_p','raceM_p','lapsFixed_p','lapM_p','lapS_p','fuelLap_p','tank_p','mandStops','safetyMargin_p',
     'includeFormation','includeCooldown',
     'pFR','pFL','pRL','pRR','tBefore','tAfter',
-    'bFR','bFL','bRL','bRR','bdBefore','bdAfter'
+    'bdFBefore','bdFAfter','bdRBefore','bdRAfter'
 ];
 inputIds.forEach(id => {
     const el = document.getElementById(id);
@@ -487,16 +495,8 @@ document.getElementById('btnFuelReset').addEventListener('click', ()=>{
 
 document.getElementById('btnTemp').addEventListener('click', calcTemp);
 document.getElementById('btnTempReset').addEventListener('click', ()=>{
-    ['pFL','pFR','pRL','pRR','tBefore','tAfter'].forEach(id=>document.getElementById(id).value='');
+    ['pFL','pFR','pRL','pRR','tBefore','tAfter','bdFBefore','bdFAfter','bdRBefore','bdRAfter'].forEach(id=>document.getElementById(id).value='');
     hide('temp-wrap'); hideResult('outTemp');
-    inputIds.forEach(id => sessionStorage.removeItem(`input_${id}`));
-    updateInputErrors();
-});
-
-document.getElementById('btnBrake').addEventListener('click', calcBrake);
-document.getElementById('btnBrakeReset').addEventListener('click', ()=>{
-    ['bFL','bFR','bRL','bRR','bdBefore','bdAfter'].forEach(id=>document.getElementById(id).value='');
-    hide('brake-wrap'); hideResult('outBrake');
     inputIds.forEach(id => sessionStorage.removeItem(`input_${id}`));
     updateInputErrors();
 });
