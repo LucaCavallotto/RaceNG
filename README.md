@@ -1,19 +1,36 @@
 # RaceTechAssistant
 
-A lightweight engineering tool for sim racers to calculate fuel strategy and tyre pressure adjustments.
+A premium, responsive engineering assistant for sim racers to calculate optimal fuel strategy and precise tyre cold pressure adjustments. Designed with a retro-futuristic engineering-style interface, harmonized dark-mode color scheme, and smooth interactive micro-animations.
 
 ## Features
 
 ### Fuel Calculator
-- **Normal Mode**: Basic race time and consumption calculations.
-- **Pro Mode**: Adds tank capacity, formation/cool-down laps, mandatory pitstops, and detailed pitstop scheduling.
-- **Safety Margin**: Customizable fuel buffer percentage.
+Three dedicated calculation modes to plan your race with optimal efficiency:
+
+- **Basic Mode**: Simple lap-count multiply. Enter fixed total laps and fuel consumption per lap. Displays total fuel and total laps in the results callout.
+- **Normal Mode (Default)**: Time-based calculation. Input race duration, average lap pace, fuel consumption per lap, and safety margin. Dynamically computes and displays the total required fuel volume and total laps.
+- **Pro Mode (Advanced)**: Comprehensive strategy engine incorporating tank capacity, mandatory pitstops, safety margin, and specialized lap options (Formation lap, Cool-down lap). Highlights include:
+  - **Greedy Maximum-Stint Strategy (`mandStops = 0`)**: Calculates strategy by filling the tank to 100% capacity (safe maximum integer laps) for all initial stints, leaving only the exact remaining fuel required to finish the race in the final stint.
+  - **Equal-Split Strategy (`mandStops > 0`)**: Distributes laps as evenly as possible across the stints while mathematically guaranteeing that no stint ever exceeds the physical tank capacity.
+  - **Interactive Pitstop Schedule**: Renders results inside a card grid showing exact stint lap ranges, stint fuel targets, and a glowing Total Fuel summary card with total laps computed.
 
 ### Tyre Pressures Calculator
-- **Unified Adjustments**: Input starting cold pressures once and apply ambient temperature changes, brake duct shifts, or both together in a single view.
-- **Ambient Temperature Compensation**: Adjusts all 4 tyres by `-0.1 psi` for every `+1°C` of ambient temperature increase (and `+0.1 psi` for every `-1°C` decrease).
-- **Coupled Front & Rear Brake Ducts**: Independently scale Front brake ducts (affecting Front Left/Right tyres) and Rear brake ducts (affecting Rear Left/Right tyres).
-- **Advanced Brake Duct Step Math**: Applies standard step shifts (`0.2 psi / step`) with advanced transition math for the crucial step between `2` and `3` (`0.3 psi`).
+Calculate adjusted cold tyre pressures based on ambient weather shifts and brake duct configurations:
+
+- **Unified Interface**: Enter current cold pressures once and preview the estimated targets in a realistic 2x2 tyre layout.
+- **Ambient Temperature Compensation**: Calculates pressure delta across all four tyres (`-0.1 psi` per `+1°C` ambient temperature increase, or `+0.1 psi` per `-1°C` decrease).
+- **Coupled Front & Rear Brake Ducts**: Adjusts tyre pressures based on brake duct sizing shifts before/after. Front brake ducts affect the front axle, and rear brake ducts affect the rear axle.
+- **Non-Linear Step Math**: Implements standard step shifts (`0.2 psi / step`) with specialized transition logic for the crucial step between `2` and `3` (`0.3 psi`).
+
+### Modern UI & Copy Tools
+- **Default View Optimization**: Defaults to **Normal Mode** upon initial load for rapid calculations, with seamless session storage persistence.
+- **5% Safety Margin Preset**: Automatically fills the safety margin fields to `5%` on first load and form resets to speed up inputs.
+- **One-Click Share Tools**: Adds **Copy Strategy** and **Copy Pressures** buttons to the results screens. Copies a beautifully formatted plain-text log containing localized headers, the current date (forced in US English), all configured inputs, and precise stint/output results.
+- **Animated Micro-Feedback**: The copy button responds instantly to clicks by changing its text to "Copied!" and displaying a temporary brand-red border glow.
+
+## Technical Specifications
+- **Core Stack**: HTML5, Vanilla JavaScript, CSS3 variables.
+- **Styling Design**: Slate grey and deep obsidian palette, carbon fiber texture backdrops, glowing brand red borders (`#e63c2e`), and responsive grid layouts.
 
 ## Disclaimer
-Calculations are estimates based on standard physics models. Results may vary by simulator and conditions. Validate with a test stint before competitive use.
+Calculations are estimates based on standard physics models. Results may vary by simulator, car class, and track conditions. Validate your strategy with a practice stint before competitive use.

@@ -41,8 +41,7 @@
   <main class="flex-grow-1">
     <div class="container">
       <h1 id="pageTitle" class="page-title">Fuel Calculator</h1>
-      <p id="pageDesc" class="page-desc">Enter race time and lap pace (or fixed laps), then Calculate. Use Pro for tank
-        size, formation/cool-down laps, and mandatory pitstops.</p>
+      <p id="pageDesc" class="page-desc">Calculate fuel requirements for your race. Use Basic for fixed laps, Normal for time-based, or Pro for full strategy with pitstops.</p>
 
       <!-- Panels -->
       <div class="row g-3">
@@ -52,8 +51,28 @@
               <div class="form-section">
                 <div class="d-flex justify-content-between align-items-center gap-2">
                   <div class="mode-toggle" role="group" aria-label="Mode">
+                    <button id="mode-basic" aria-pressed="false">Basic</button>
                     <button id="mode-normal" aria-pressed="true">Normal</button>
                     <button id="mode-pro" aria-pressed="false">Pro</button>
+                  </div>
+                </div>
+
+                <!-- BASIC FORM -->
+                <div id="fuel-form-basic" aria-hidden="true" style="display:none">
+                  <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                      <label for="lapsFixed_b">Total laps</label>
+                      <div class="input w-100"><input id="lapsFixed_b" type="number" min="1" placeholder="e.g. 25"
+                          aria-describedby="error-lapsFixed_b"><span class="unit">laps</span></div>
+                      <span id="error-lapsFixed_b" class="error-message"></span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label for="fuelLap_b">Fuel per lap</label>
+                      <div class="input w-100"><input id="fuelLap_b" type="number" min="0" step="0.01"
+                          placeholder="e.g. 2.45" aria-describedby="error-fuelLap_b"><span class="unit"
+                          data-u="volume">L</span></div>
+                      <span id="error-fuelLap_b" class="error-message"></span>
+                    </div>
                   </div>
                 </div>
 
@@ -74,12 +93,6 @@
                           <span id="error-raceM" class="error-message"></span>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                      <label for="lapsFixed">Fixed total laps (optional)</label>
-                      <div class="input w-100"><input id="lapsFixed" type="number" min="0" placeholder="e.g. 0"
-                          aria-describedby="error-lapsFixed"><span class="unit">laps</span></div>
-                      <span id="error-lapsFixed" class="error-message"></span>
                     </div>
                     <div class="col-12 col-md-6">
                       <label for="lapM">Average lap time</label>
@@ -106,7 +119,7 @@
                     <div class="col-12 col-md-6">
                       <label for="safetyMargin">Safety margin (optional)</label>
                       <div class="input w-100"><input id="safetyMargin" type="number" min="0" step="1"
-                          placeholder="e.g. 5" aria-describedby="error-safetyMargin"><span class="unit">%</span></div>
+                          placeholder="e.g. 5" value="5" aria-describedby="error-safetyMargin"><span class="unit">%</span></div>
                       <span id="error-safetyMargin" class="error-message"></span>
                     </div>
                   </div>
@@ -129,12 +142,6 @@
                           <span id="error-raceM_p" class="error-message"></span>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                      <label for="lapsFixed_p">Fixed total laps (optional)</label>
-                      <div class="input w-100"><input id="lapsFixed_p" type="number" min="0" placeholder="e.g. 0"
-                          aria-describedby="error-lapsFixed_p"><span class="unit">laps</span></div>
-                      <span id="error-lapsFixed_p" class="error-message"></span>
                     </div>
                     <div class="col-12 col-md-6">
                       <label for="lapM_p">Average lap time</label>
@@ -174,20 +181,19 @@
                     <div class="col-12 col-md-6">
                       <label for="safetyMargin_p">Safety margin (optional)</label>
                       <div class="input w-100"><input id="safetyMargin_p" type="number" min="0" step="1"
-                          placeholder="e.g. 5" aria-describedby="error-safetyMargin_p"><span class="unit">%</span></div>
+                          placeholder="e.g. 5" value="5" aria-describedby="error-safetyMargin_p"><span class="unit">%</span></div>
                       <span id="error-safetyMargin_p" class="error-message"></span>
                     </div>
-                    <div class="col-12 col-md-6">
-                      <label>Lap options</label>
-                      <div class="row g-2 align-items-center">
-                        <div class="col-6">
-                          <label class="checkbox-label"><input id="includeFormation" type="checkbox" checked
-                              style="margin-right:8px">Formation lap</label>
-                        </div>
-                        <div class="col-6">
-                          <label class="checkbox-label"><input id="includeCooldown" type="checkbox" checked
-                              style="margin-right:8px">Cool-down lap</label>
-                        </div>
+                    <div class="col-12">
+                      <div class="lap-options-row">
+                        <label class="lap-option-pill">
+                          <input id="includeFormation" type="checkbox" checked>
+                          <span class="pill-label">Formation lap</span>
+                        </label>
+                        <label class="lap-option-pill">
+                          <input id="includeCooldown" type="checkbox" checked>
+                          <span class="pill-label">Cool-down lap</span>
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -195,8 +201,13 @@
               </div>
 
               <div class="btns">
-                <button class="primary" id="btnFuel" disabled>Calculate fuel</button>
                 <button class="secondary" id="btnFuelReset">Reset</button>
+                <button class="primary" id="btnFuel" disabled>Calculate fuel</button>
+              </div>
+
+              <!-- Total laps summary (shown first) -->
+              <div id="fuel-laps-summary" class="laps-summary-banner" style="display:none" role="status" aria-live="polite">
+                <span>Total Laps:</span> <strong id="fuel-laps-count">0</strong>
               </div>
 
               <!-- BIG callout: Start fuel -->
@@ -209,6 +220,14 @@
               <!-- Pitstop Schedule (Pro mode only) -->
               <div id="pitstop-grid" class="pitstop-grid" role="group" aria-label="Pitstop schedule"
                 style="display:none"></div>
+
+              <!-- Copy Strategy Button Container -->
+              <div id="fuel-copy-container" class="copy-container" style="display:none">
+                <button class="btn-copy" id="btnFuelCopy" type="button">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Copy Strategy</span>
+                </button>
+              </div>
 
               <div id="outFuel" class="result" role="status" aria-live="polite"></div>
             </div>
@@ -291,8 +310,8 @@
               </div>
 
               <div class="btns">
-                <button class="primary" id="btnTemp" disabled>Calculate pressures</button>
                 <button class="secondary" id="btnTempReset">Reset</button>
+                <button class="primary" id="btnTemp" disabled>Calculate pressures</button>
               </div>
 
               <!-- Results (Temperature → Pressure) -->
@@ -320,6 +339,13 @@
                           data-u="pressure">psi</span></strong>
                       <div class="text-uppercase small" style="color:var(--muted)">Rear Right</div>
                     </div>
+                  </div>
+                  <!-- Copy Pressures Button Container -->
+                  <div id="temp-copy-container" class="copy-container" style="display:none">
+                    <button class="btn-copy" id="btnTempCopy" type="button">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                      <span>Copy Pressures</span>
+                    </button>
                   </div>
                 </div>
               </div>
