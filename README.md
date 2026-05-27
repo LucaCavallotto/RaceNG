@@ -29,15 +29,5 @@ RaceTechAssistant supports direct keyboard shortcuts to streamline your strategy
 - **`C` / `c`**: Press to copy computed strategy or pressure targets directly to your clipboard (only when results are visible).
 - **Shortcut Safety**: Shortcuts dynamically ignore standard modifier key groups (e.g. `Cmd`, `Ctrl`, `Alt`, `Shift`) to prevent overriding native browser commands such as page reload (`Cmd+R` / `Ctrl+R`) and highlighted text copying (`Cmd+C` / `Ctrl+C`).
 
-### Modern UI & Copy Tools
-- **Default View Optimization**: Defaults to **Normal Mode** upon initial load for rapid calculations, with seamless session storage persistence.
-- **5% Safety Margin Preset**: Automatically fills the safety margin fields to `5%` on first load and form resets to speed up inputs.
-- **One-Click Share Tools**: Adds **Copy Strategy** and **Copy Pressures** buttons to the results screens. Copies a beautifully formatted plain-text log containing localized headers, the current date (forced in US English), all configured inputs, and precise stint/output results.
-- **Animated Micro-Feedback**: The copy button responds instantly to clicks by changing its text to "Copied!" and displaying a temporary brand-red border glow.
-
-## Technical Specifications
-- **Core Stack**: HTML5, Vanilla JavaScript, CSS3 variables.
-- **Styling Design**: Slate grey and deep obsidian palette, carbon fiber texture backdrops, glowing brand red borders (`#e63c2e`), and responsive grid layouts.
-
 ## Disclaimer
 Calculations are estimates based on standard physics models. Results may vary by simulator, car class, and track conditions. Validate your strategy with a practice stint before competitive use.

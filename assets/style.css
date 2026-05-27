@@ -70,11 +70,6 @@
   50%      { box-shadow: 0 0 16px var(--brand-glow), 0 0 32px var(--brand-dim); }
 }
 
-@keyframes breathe {
-  0%, 100% { opacity: 0.7; }
-  50%      { opacity: 1; }
-}
-
 @keyframes scan-lines {
   0%   { transform: translateY(0); }
   100% { transform: translateY(4px); }
@@ -136,15 +131,7 @@ a{color:inherit;text-decoration:none}
   position: relative;
 }
 
-/* Racing stripe — thin red line at very top of page */
-.navbar::before{
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0;
-  height:3px;
-  background: linear-gradient(90deg, var(--brand) 0%, #ff6b4a 40%, var(--accent) 100%);
-  opacity: 0.9;
-}
+
 
 .navbar.navbar-dark .navbar-toggler-icon{filter: invert(1) grayscale(100%)}
 
@@ -534,19 +521,7 @@ button:disabled{
   box-shadow: inset 0 -2px 0 var(--brand);
 }
 
-/* Amber indicator dot on active toggle */
-.mode-toggle button[aria-pressed="true"]::after{
-  content:'';
-  position:absolute;
-  top: 6px;
-  right: 6px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 6px var(--accent-glow);
-  animation: breathe 2s ease-in-out infinite;
-}
+
 
 /* === FUEL CALLOUT === */
 .big-callout{
