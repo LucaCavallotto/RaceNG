@@ -106,6 +106,7 @@ function setMode(mode) {
     hide('fuel-copy-container');
     hide('fuel-laps-summary');
     hideResult('outFuel');
+    hide('fuel-result-card');
     updateInputErrors();
 }
 
@@ -396,6 +397,7 @@ function calcFuel() {
         hide('fuel-callout');
         hide('fuel-copy-container');
         hide('fuel-laps-summary');
+        showBlock('fuel-result-card');
         showResult('outFuel', '❌ <span class="err">Please correct invalid inputs.</span>');
         return;
     }
@@ -547,6 +549,7 @@ function calcFuel() {
     // Clear errors
     hideResult('outFuel');
     showBlock('fuel-copy-container');
+    showBlock('fuel-result-card');
 
     // Trigger entrance animation
     const callout = document.getElementById('fuel-callout');
@@ -562,6 +565,7 @@ function calcTemp() {
     if (Object.keys(errors).length > 0) {
         hide('temp-wrap');
         hide('temp-copy-container');
+        showBlock('temp-result-card');
         showResult('outTemp', '❌ <span class="err">Please correct invalid inputs.</span>');
         return;
     }
@@ -600,6 +604,7 @@ function calcTemp() {
     showGrid('temp-wrap');
     showGrid('temp-tyre-grid');
     showBlock('temp-copy-container');
+    showBlock('temp-result-card');
 
     // Trigger entrance animation
     const tyreGrid = document.getElementById('temp-tyre-grid');
@@ -654,6 +659,7 @@ document.getElementById('btnFuelReset').addEventListener('click', () => {
     hide('fuel-copy-container');
     hide('fuel-laps-summary');
     hideResult('outFuel');
+    hide('fuel-result-card');
     allInputIds.forEach(id => sessionStorage.removeItem(`input_${id}`));
     sessionStorage.removeItem('fuelMode');
     updateInputErrors();
@@ -664,6 +670,7 @@ document.getElementById('btnTempReset').addEventListener('click', () => {
     ['pFL', 'pFR', 'pRL', 'pRR', 'tBefore', 'tAfter', 'bdFBefore', 'bdFAfter', 'bdRBefore', 'bdRAfter'].forEach(id => document.getElementById(id).value = '');
     hide('temp-wrap'); hideResult('outTemp');
     hide('temp-copy-container');
+    hide('temp-result-card');
     allInputIds.forEach(id => sessionStorage.removeItem(`input_${id}`));
     updateInputErrors();
 });
