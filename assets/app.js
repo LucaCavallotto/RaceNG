@@ -409,6 +409,10 @@ function calcFuel(){
 
     // Clear errors
     hideResult('outFuel');
+
+    // Trigger entrance animation
+    const callout = document.getElementById('fuel-callout');
+    if(callout) { callout.classList.remove('animate-in'); void callout.offsetWidth; callout.classList.add('animate-in'); }
 }
 
 // Temp → Pressure
@@ -456,6 +460,10 @@ function calcTemp(){
     hideResult('outTemp');
     showGrid('temp-wrap');
     showGrid('temp-tyre-grid');
+
+    // Trigger entrance animation
+    const tyreGrid = document.getElementById('temp-tyre-grid');
+    if(tyreGrid) { tyreGrid.classList.remove('animate-in'); void tyreGrid.offsetWidth; tyreGrid.classList.add('animate-in'); }
 }
 
 // Attach input listeners for validation and storage
