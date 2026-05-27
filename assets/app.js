@@ -92,7 +92,7 @@ function saveInputsToStorage(){
     mandStops: inputs.mandStops, safetyMargin_p: inputs.safetyMargin,
     includeFormation: inputs.includeFormation, includeCooldown: inputs.includeCooldown,
     pFR: tempInputs.pFR, pFL: tempInputs.pFL, pRL: tempInputs.pRL, pRR: tempInputs.pRR,
-    tBefore: tempInputs.tBefore, tAfter: tempInputs.tAfter, targetMin: tempInputs.targetMin, targetMax: tempInputs.targetMax,
+    tBefore: tempInputs.tBefore, tAfter: tempInputs.tAfter,
     bFR: brakeInputs.bFR, bFL: brakeInputs.bFL, bRL: brakeInputs.bRL, bRR: brakeInputs.bRR,
     bdBefore: brakeInputs.bdBefore, bdAfter: brakeInputs.bdAfter
     };
@@ -103,7 +103,7 @@ function loadInputsFromStorage(){
     const fields = [
     'raceH','raceM','lapsFixed','lapM','lapS','fuelLap','safetyMargin',
     'raceH_p','raceM_p','lapsFixed_p','lapM_p','lapS_p','fuelLap_p','tank_p','mandStops','safetyMargin_p',
-    'pFR','pFL','pRL','pRR','tBefore','tAfter','targetMin','targetMax',
+    'pFR','pFL','pRL','pRR','tBefore','tAfter',
     'bFR','bFL','bRL','bRR','bdBefore','bdAfter'
     ];
     fields.forEach(id => {
@@ -163,11 +163,6 @@ function validateTempInputs(){
     if (Number.isNaN(inp.pRR) || inp.pRR <= 0) errors.pRR = 'Must be positive';
     if (Number.isNaN(inp.tBefore)) errors.tBefore = 'Must be a valid number';
     if (Number.isNaN(inp.tAfter)) errors.tAfter = 'Must be a valid number';
-    if (!Number.isNaN(inp.targetMin) && inp.targetMin < 0) errors.targetMin = 'Must be non-negative';
-    if (!Number.isNaN(inp.targetMax) && inp.targetMax < 0) errors.targetMax = 'Must be non-negative';
-    if (!Number.isNaN(inp.targetMin) && !Number.isNaN(inp.targetMax) && inp.targetMin > inp.targetMax) {
-    errors.targetMin = errors.targetMax = 'Min must be less than or equal to Max';
-    }
 
     return errors;
 }
@@ -212,7 +207,7 @@ function updateInputErrors(){
     document.getElementById('btnFuel').disabled = Object.keys(errors).length > 0;
     } else if (activeTab === 'tab-temp') {
     errors = validateTempInputs();
-    const fields = ['pFR','pFL','pRL','pRR','tBefore','tAfter','targetMin','targetMax'];
+    const fields = ['pFR','pFL','pRL','pRR','tBefore','tAfter'];
     fields.forEach(id => {
         const input = document.getElementById(id);
         const errorEl = document.getElementById(`error-${id}`);
@@ -272,8 +267,7 @@ function readFuelInputs(){
 function readTempInputs(){
     return {
     pFR: num('pFR'), pFL: num('pFL'), pRL: num('pRL'), pRR: num('pRR'),
-    tBefore: num('tBefore'), tAfter: num('tAfter'),
-    targetMin: num('targetMin'), targetMax: num('targetMax')
+    tBefore: num('tBefore'), tAfter: num('tAfter')
     };
 }
 
@@ -425,12 +419,6 @@ function calcTemp(){
     document.getElementById('tp-rl').textContent = corrected[2];
     document.getElementById('tp-rr').textContent = corrected[3];
 
-    let status = '—';
-    if (!Number.isNaN(inp.targetMin) && !Number.isNaN(inp.targetMax)){
-    const allOk = corrected.every(v=>v>=inp.targetMin && v<=inp.targetMax);
-    status = allOk ? 'Within window' : 'Adjust needed';
-    }
-
     hideResult('outTemp');
     showGrid('temp-wrap');
     showGrid('temp-tyre-grid');
@@ -467,7 +455,7 @@ const inputIds = [
     'raceH','raceM','lapsFixed','lapM','lapS','fuelLap','safetyMargin',
     'raceH_p','raceM_p','lapsFixed_p','lapM_p','lapS_p','fuelLap_p','tank_p','mandStops','safetyMargin_p',
     'includeFormation','includeCooldown',
-    'pFR','pFL','pRL','pRR','tBefore','tAfter','targetMin','targetMax',
+    'pFR','pFL','pRL','pRR','tBefore','tAfter',
     'bFR','bFL','bRL','bRR','bdBefore','bdAfter'
 ];
 inputIds.forEach(id => {
@@ -499,7 +487,7 @@ document.getElementById('btnFuelReset').addEventListener('click', ()=>{
 
 document.getElementById('btnTemp').addEventListener('click', calcTemp);
 document.getElementById('btnTempReset').addEventListener('click', ()=>{
-    ['pFL','pFR','pRL','pRR','tBefore','tAfter','targetMin','targetMax'].forEach(id=>document.getElementById(id).value='');
+    ['pFL','pFR','pRL','pRR','tBefore','tAfter'].forEach(id=>document.getElementById(id).value='');
     hide('temp-wrap'); hideResult('outTemp');
     inputIds.forEach(id => sessionStorage.removeItem(`input_${id}`));
     updateInputErrors();
