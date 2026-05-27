@@ -1,27 +1,43 @@
-# ⛽ RaceTechAssistant
+# RaceTechAssistant
 
-A lightweight engineering tool for sim racers to calculate fuel strategy and tyre pressure adjustments.
+A premium, responsive engineering assistant for sim racers to calculate optimal fuel strategy and precise tyre cold pressure adjustments. Designed with a retro-futuristic engineering-style interface, harmonized dark-mode color scheme, and smooth interactive micro-animations.
 
 ## Features
 
 ### Fuel Calculator
-- **Normal Mode**: Basic race time and consumption calculations.
-- **Pro Mode**: Adds tank capacity, formation/cool-down laps, mandatory pitstops, and detailed pitstop scheduling.
-- **Safety Margin**: Customizable fuel buffer percentage.
+Three dedicated calculation modes to plan your race with optimal efficiency:
 
-### Tyre Pressures
-- **Temperature Compensation**: Calculates pressure delta based on ambient temperature shifts (0.1 psi / °C).
-- **Brake Duct Scaling**: Estimates pressure changes based on brake duct settings (0.2 psi / step).
-- **Target Tracking**: Visual indicators for staying within defined pressure windows.
+- **Basic Mode**: Simple lap-count multiply. Enter fixed total laps and fuel consumption per lap. Displays total fuel and total laps in the results callout.
+- **Normal Mode (Default)**: Time-based calculation. Input race duration, average lap pace, fuel consumption per lap, and safety margin. Dynamically computes and displays the total required fuel volume and total laps.
+- **Pro Mode (Advanced)**: Comprehensive strategy engine incorporating tank capacity, mandatory pitstops, safety margin, and specialized lap options (Formation lap, Cool-down lap). Highlights include:
+  - **Greedy Maximum-Stint Strategy (`mandStops = 0`)**: Calculates strategy by filling the tank to 100% capacity (safe maximum integer laps) for all initial stints, leaving only the exact remaining fuel required to finish the race in the final stint.
+  - **Equal-Split Strategy (`mandStops > 0`)**: Distributes laps as evenly as possible across the stints while mathematically guaranteeing that no stint ever exceeds the physical tank capacity.
+  - **Interactive Pitstop Schedule**: Renders results inside a card grid showing exact stint lap ranges, stint fuel targets, and a glowing Total Fuel summary card with total laps computed.
 
-## Tech Stack
-- **Frontend**: HTML5, Vanilla JavaScript, CSS3 (Bootstrap 5.3).
-- **Storage**: `SessionStorage` for input persistence.
-- **Design**: Responsive layout for mobile and desktop use.
+### Tyre Pressures Calculator
+Calculate adjusted cold tyre pressures based on ambient weather shifts and brake duct configurations:
 
-## Usage
-1. Clone the repository.
-2. Open `index.html` in any web browser.
+- **Unified Interface**: Enter current cold pressures once and preview the estimated targets in a realistic 2x2 tyre layout.
+- **Ambient Temperature Compensation**: Calculates pressure delta across all four tyres (`-0.1 psi` per `+1°C` ambient temperature increase, or `+0.1 psi` per `-1°C` decrease).
+- **Coupled Front & Rear Brake Ducts**: Adjusts tyre pressures based on brake duct sizing shifts before/after. Front brake ducts affect the front axle, and rear brake ducts affect the rear axle.
+- **Non-Linear Step Math**: Implements standard step shifts (`0.2 psi / step`) with specialized transition logic for the crucial step between `2` and `3` (`0.3 psi`).
+
+### Keyboard Controls & Hotkeys
+RaceTechAssistant supports direct keyboard shortcuts to streamline your strategy formulation:
+- **`Enter`**: Focus any input field and press `Enter` to instantly execute the calculation for the active panel.
+- **`R` / `r`**: Press to reset the active calculator tab and clear stored configuration fields.
+- **`C` / `c`**: Press to copy computed strategy or pressure targets directly to your clipboard (only when results are visible).
+- **Shortcut Safety**: Shortcuts dynamically ignore standard modifier key groups (e.g. `Cmd`, `Ctrl`, `Alt`, `Shift`) to prevent overriding native browser commands such as page reload (`Cmd+R` / `Ctrl+R`) and highlighted text copying (`Cmd+C` / `Ctrl+C`).
+
+### Modern UI & Copy Tools
+- **Default View Optimization**: Defaults to **Normal Mode** upon initial load for rapid calculations, with seamless session storage persistence.
+- **5% Safety Margin Preset**: Automatically fills the safety margin fields to `5%` on first load and form resets to speed up inputs.
+- **One-Click Share Tools**: Adds **Copy Strategy** and **Copy Pressures** buttons to the results screens. Copies a beautifully formatted plain-text log containing localized headers, the current date (forced in US English), all configured inputs, and precise stint/output results.
+- **Animated Micro-Feedback**: The copy button responds instantly to clicks by changing its text to "Copied!" and displaying a temporary brand-red border glow.
+
+## Technical Specifications
+- **Core Stack**: HTML5, Vanilla JavaScript, CSS3 variables.
+- **Styling Design**: Slate grey and deep obsidian palette, carbon fiber texture backdrops, glowing brand red borders (`#e63c2e`), and responsive grid layouts.
 
 ## Disclaimer
-Calculations are estimates based on standard physics models. Results may vary by simulator and conditions. Validate with a test stint before competitive use.
+Calculations are estimates based on standard physics models. Results may vary by simulator, car class, and track conditions. Validate your strategy with a practice stint before competitive use.
