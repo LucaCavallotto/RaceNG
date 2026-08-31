@@ -1,6 +1,6 @@
 # RaceTechAssistant
 
-A premium, responsive engineering assistant for sim racers to calculate optimal fuel strategy and precise tyre cold pressure adjustments. Designed with a retro-futuristic engineering-style interface, harmonized dark-mode color scheme, and smooth interactive micro-animations.
+A strategic sim racing assistant designed to calculate optimal fuel loads and tyre cold pressure adjustments. Features multi-mode fuel calculation (Basic, Normal, and Pro stint/pitstop planning with formation/cool-down lap margins) and telemetry-based cold pressure tuning to reach target operating pressures.
 
 ## Features
 
