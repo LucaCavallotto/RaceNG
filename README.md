@@ -1,6 +1,6 @@
-# RaceTechAssistant
+# RaceNG
 
-A strategic sim racing assistant designed to calculate optimal fuel loads and tyre cold pressure adjustments. Features multi-mode fuel calculation (Basic, Normal, and Pro stint/pitstop planning with formation/cool-down lap margins) and telemetry-based cold pressure tuning to reach target operating pressures.
+RaceNG is a strategic sim racing assistant designed for Assetto Corsa Competizione. It helps you calculate optimal fuel loads with multi-mode support (Basic, Normal, and Pro) and adjust your tyre setup pressures based on ambient temperature and brake duct changes to consistently hit your target operating pressures.
 
 ## Features
 
@@ -23,7 +23,7 @@ Calculate adjusted cold tyre pressures based on ambient weather shifts and brake
 - **Non-Linear Step Math**: Implements standard step shifts (`0.2 psi / step`) with specialized transition logic for the crucial step between `2` and `3` (`0.3 psi`).
 
 ### Keyboard Controls & Hotkeys
-RaceTechAssistant supports direct keyboard shortcuts to streamline your strategy formulation:
+RaceNG supports direct keyboard shortcuts to streamline your strategy formulation:
 - **`Enter`**: Focus any input field and press `Enter` to instantly execute the calculation for the active panel.
 - **`R` / `r`**: Press to reset the active calculator tab and clear stored configuration fields.
 - **`C` / `c`**: Press to copy computed strategy or pressure targets directly to your clipboard (only when results are visible).

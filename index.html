@@ -1,1288 +1,1466 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrackEngineer</title>
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
-
-    :root {
-      --shell: #181a19;
-      --shell-light: #242725;
-      --lcd: #98dadc;
-      --lcd-dark: #68b8ba;
-      --ink: #1e2b2c;
-      --ink-soft: rgba(30, 43, 44, .68);
-      --line: rgba(30, 43, 44, .58);
-      --ghost: rgba(30, 43, 44, .10);
-      --danger: #7a2828;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at 50% 35%, var(--lcd) 0%, #82c9cb 48%, var(--lcd-dark) 100%);
-      color: var(--lcd);
-      font-family: "Share Tech Mono", monospace;
-      padding: 0;
-    }
-
-    .screen {
-      position: relative;
-      overflow: hidden;
-      min-height: 100vh;
-      padding: clamp(18px, 3vw, 34px);
-      color: var(--ink);
-      background: radial-gradient(circle at 50% 35%, var(--lcd) 0%, #82c9cb 48%, var(--lcd-dark) 100%);
-    }
-
-    .screen::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom,
-          rgba(255, 255, 255, .035) 0,
-          rgba(255, 255, 255, .035) 1px,
-          rgba(0, 0, 0, .025) 1px,
-          rgba(0, 0, 0, .025) 3px);
-      mix-blend-mode: multiply;
-    }
-
-    /* Header */
-    .header {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      border-bottom: 3px solid var(--ink);
-      padding-bottom: 13px;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      font-family: "VT323", monospace;
-      font-size: 38px;
-      line-height: .8;
-      letter-spacing: 2px;
-    }
-
-    .brand small {
-      display: block;
-      font-family: "Share Tech Mono", monospace;
-      font-size: 11px;
-      letter-spacing: 3px;
-      margin-top: 9px;
-    }
-
-    .status {
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-align: right;
-    }
-
-    /* Navigation */
-    .nav {
-      position: relative;
-      z-index: 3;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 2px solid var(--ink);
-      margin-bottom: 20px;
-    }
-
-    .nav button {
-      appearance: none;
-      border: 0;
-      border-right: 2px solid var(--ink);
-      padding: 11px;
-      background: transparent;
-      color: var(--ink);
-      font: inherit;
-      font-size: 15px;
-      letter-spacing: 2px;
-      cursor: pointer;
-    }
-
-    .nav button:last-child {
-      border-right: 0;
-    }
-
-    .nav button.active {
-      background: var(--ink);
-      color: var(--lcd);
-    }
-
-    /* Main panels */
-    .panel {
-      display: none;
-      position: relative;
-      z-index: 2;
-    }
-
-    .panel.active {
-      display: block;
-    }
-
-    .section-title {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      border-bottom: 2px solid var(--ink);
-      padding-bottom: 7px;
-      margin-bottom: 15px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-family: "VT323", monospace;
-      font-size: 27px;
-      font-weight: normal;
-      letter-spacing: 2px;
-    }
-
-    .section-title span {
-      font-size: 11px;
-      letter-spacing: 1px;
-    }
-
-    /* Mode selector */
-    .mode-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border: 2px solid var(--ink);
-      margin-bottom: 17px;
-    }
-
-    .mode-tabs button {
-      border: 0;
-      border-right: 2px solid var(--ink);
-      background: transparent;
-      color: var(--ink);
-      padding: 5px;
-      font: inherit;
-      letter-spacing: 2px;
-      cursor: pointer;
-    }
-
-    .mode-tabs button:last-child {
-      border-right: 0;
-    }
-
-    .mode-tabs button.active {
-      background: var(--ink);
-      color: var(--lcd);
-    }
-
-    /* Forms */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px 20px;
-    }
-
-    .field {
-      border-bottom: 2px solid var(--line);
-      padding: 7px 0 8px;
-    }
-
-    .field label {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 1.4px;
-      margin-bottom: 4px;
-    }
-
-    .field input,
-    .field select {
-      width: 100%;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: var(--ink);
-      font: 24px "Share Tech Mono", monospace;
-      padding: 0;
-    }
-
-    .field input:focus,
-    .field select:focus {
-      background: rgba(255, 255, 255, .14);
-    }
-
-    .field input::placeholder {
-      color: rgba(30, 43, 44, .38);
-    }
-
-    .checks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      padding: 15px 0;
-    }
-
-    .check {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 12px;
-    }
-
-    .check input {
-      accent-color: var(--ink);
-    }
-
-    /* Buttons */
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin: 17px 0;
-    }
-
-    .action {
-      border: 2px solid var(--ink);
-      background: var(--ink);
-      color: var(--lcd);
-      font: inherit;
-      padding: 11px 18px;
-      letter-spacing: 1.5px;
-      cursor: pointer;
-    }
-
-    .action.secondary {
-      background: transparent;
-      color: var(--ink);
-    }
-
-    .action:hover {
-      background: var(--lcd);
-      color: var(--ink);
-    }
-
-    .action:active {
-      background: var(--ink);
-      color: var(--lcd);
-    }
-
-    .action:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    /* Results */
-    .result-shell {
-      margin-top: 18px;
-      border: 3px solid var(--ink);
-      padding: 15px;
-    }
-
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      letter-spacing: 2px;
-      border-bottom: 2px solid var(--line);
-      padding-bottom: 8px;
-    }
-
-    .big-result {
-      position: relative;
-      padding: 17px 0 12px;
-      overflow: hidden;
-    }
-
-    .big-result .ghost {
-      position: absolute;
-      inset: 2px 0 auto;
-      color: var(--ghost);
-      font-family: "Share Tech Mono", monospace;
-      font-size: clamp(55px, 10vw, 105px);
-      line-height: 1;
-      pointer-events: none;
-    }
-
-    .big-result .value {
-      position: relative;
-      font-family: "Share Tech Mono", monospace;
-      font-size: clamp(55px, 10vw, 105px);
-      line-height: 1;
-      letter-spacing: 2px;
-      text-shadow: 0 0 1px rgba(30, 43, 44, .4);
-    }
-
-    .big-result .unit {
-      font-size: 15px;
-      letter-spacing: 2px;
-    }
-
-    .stints {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      border-top: 2px solid var(--ink);
-      margin-top: 8px;
-    }
-
-    .stint {
-      border-right: 2px solid var(--ink);
-      padding: 5px;
-    }
-
-    .stint:last-child {
-      border-right: 0;
-    }
-
-    .stint-name {
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
-
-    .stint-value {
-      margin-top: 8px;
-      font-size: 24px;
-    }
-
-    .stint-meta {
-      margin-top: 3px;
-      font-size: 11px;
-    }
-
-    /* Tyres */
-    .tyre-layout {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .tyre-card {
-      position: relative;
-      border: 2px solid var(--ink);
-      min-height: 150px;
-      padding: 14px;
-    }
-
-    .tyre-card .tyre-input.field {
-      display: block;
-      width: 100%;
-      height: auto;
-      margin: 12px 0 0;
-      padding: 3px 0 6px;
-      border: 0;
-      border-bottom: 2px solid var(--line);
-      border-radius: 0;
-      background: transparent;
-      color: var(--ink);
-      font: 18px "Share Tech Mono", monospace;
-      outline: none;
-    }
-
-    .tyre-card .tyre-input:focus {
-      background: rgba(255, 255, 255, .14);
-      border-bottom-color: var(--ink);
-    }
-
-    .tyre-card::before {
-      content: "";
-      position: absolute;
-      right: 12px;
-      bottom: 5px;
-      color: var(--ghost);
-      font-size: 56px;
-    }
-
-    .tyre-pos {
-      font-size: 13px;
-      letter-spacing: 2px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 6px;
-    }
-
-    .tyre-value {
-      margin-top: 19px;
-      font-size: 50px;
-      line-height: 1;
-    }
-
-    .tyre-value small {
-      font-size: 13px;
-      letter-spacing: 1px;
-    }
-
-    .pressure-grid {
-      margin-top: 18px;
-      border-top: 2px solid var(--ink);
-      padding-top: 14px;
-    }
-
-    /* Error */
-    .error {
-      color: var(--danger);
-      border-color: var(--danger) !important;
-    }
-
-    .notice {
-      margin-top: 12px;
-      font-size: 11px;
-      letter-spacing: .8px;
-    }
-
-    /* Footer */
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 18px;
-      padding-top: 9px;
-      border-top: 2px solid var(--ink);
-      font-size: 10px;
-      letter-spacing: 1px;
-    }
-
-    /* Mobile */
-    @media (max-width: 700px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RaceNG</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap");
+
+      :root {
+        --shell: #181a19;
+        --shell-light: #242725;
+        --lcd: #98dadc;
+        --lcd-dark: #68b8ba;
+        --ink: #1e2b2c;
+        --ink-soft: rgba(30, 43, 44, 0.68);
+        --line: rgba(30, 43, 44, 0.58);
+        --ghost: rgba(30, 43, 44, 0.1);
+        --danger: #7a2828;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
       body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(
+          circle at 50% 35%,
+          var(--lcd) 0%,
+          #82c9cb 48%,
+          var(--lcd-dark) 100%
+        );
+        color: var(--lcd);
+        font-family: "Share Tech Mono", monospace;
         padding: 0;
       }
 
       .screen {
-        padding: 15px;
+        position: relative;
+        overflow: hidden;
         min-height: 100vh;
+        padding: clamp(18px, 3vw, 34px);
+        color: var(--ink);
+        background: radial-gradient(
+          circle at 50% 35%,
+          var(--lcd) 0%,
+          #82c9cb 48%,
+          var(--lcd-dark) 100%
+        );
       }
 
+      .screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0.035) 0,
+          rgba(255, 255, 255, 0.035) 1px,
+          rgba(0, 0, 0, 0.025) 1px,
+          rgba(0, 0, 0, 0.025) 3px
+        );
+        mix-blend-mode: multiply;
+      }
+
+      /* Header */
       .header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        border-bottom: 3px solid var(--ink);
+        padding-bottom: 13px;
+        margin-bottom: 18px;
+      }
+
+      .brand {
+        font-family: "VT323", monospace;
+        font-size: 38px;
+        line-height: 0.8;
+        letter-spacing: 2px;
+      }
+
+      .brand small {
+        display: block;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 3px;
+        margin-top: 9px;
       }
 
       .status {
-        text-align: left;
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-align: right;
       }
 
+      /* Navigation */
+      .nav {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border: 2px solid var(--ink);
+        margin-bottom: 20px;
+      }
+
+      .nav button {
+        appearance: none;
+        border: 0;
+        border-right: 2px solid var(--ink);
+        padding: 11px;
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+        font-size: 15px;
+        letter-spacing: 2px;
+        cursor: pointer;
+      }
+
+      .nav button:last-child {
+        border-right: 0;
+      }
+
+      .nav button.active {
+        background: var(--ink);
+        color: var(--lcd);
+      }
+
+      /* Main panels */
+      .panel {
+        display: none;
+        position: relative;
+        z-index: 2;
+      }
+
+      .panel.active {
+        display: block;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 7px;
+        margin-bottom: 15px;
+      }
+
+      .section-title h2 {
+        margin: 0;
+        font-family: "VT323", monospace;
+        font-size: 27px;
+        font-weight: normal;
+        letter-spacing: 2px;
+      }
+
+      .section-title span {
+        font-size: 11px;
+        letter-spacing: 1px;
+      }
+
+      /* Mode selector */
+      .mode-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border: 2px solid var(--ink);
+        margin-bottom: 17px;
+      }
+
+      .mode-tabs button {
+        border: 0;
+        border-right: 2px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        padding: 5px;
+        font: inherit;
+        letter-spacing: 2px;
+        cursor: pointer;
+      }
+
+      .mode-tabs button:last-child {
+        border-right: 0;
+      }
+
+      .mode-tabs button.active {
+        background: var(--ink);
+        color: var(--lcd);
+      }
+
+      /* Forms */
       .form-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 20px;
       }
 
-      .tyre-layout {
-        grid-template-columns: 1fr;
+      .field {
+        border-bottom: 2px solid var(--line);
+        padding: 7px 0 8px;
       }
 
+      .field label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 1.4px;
+        margin-bottom: 4px;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--ink);
+        font:
+          24px "Share Tech Mono",
+          monospace;
+        padding: 0;
+      }
+
+      .field input:focus,
+      .field select:focus {
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .field input::placeholder {
+        color: rgba(30, 43, 44, 0.38);
+      }
+
+      .checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 15px 0;
+      }
+
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+      }
+
+      .check input {
+        accent-color: var(--ink);
+      }
+
+      /* Buttons */
       .actions {
-        flex-direction: column;
+        display: flex;
+        gap: 10px;
+        margin: 17px 0;
       }
 
       .action {
+        border: 2px solid var(--ink);
+        background: var(--ink);
+        color: var(--lcd);
+        font: inherit;
+        padding: 11px 18px;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+      }
+
+      .action.secondary {
+        background: transparent;
+        color: var(--ink);
+      }
+
+      .action:hover {
+        background: var(--lcd);
+        color: var(--ink);
+      }
+
+      .action:active {
+        background: var(--ink);
+        color: var(--lcd);
+      }
+
+      .action:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* Results */
+      .result-shell {
+        margin-top: 18px;
+        border: 3px solid var(--ink);
+        padding: 15px;
+      }
+
+      .result-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        letter-spacing: 2px;
+        border-bottom: 2px solid var(--line);
+        padding-bottom: 8px;
+      }
+
+      .big-result {
+        position: relative;
+        padding: 17px 0 12px;
+        overflow: hidden;
+      }
+
+      .big-result .ghost {
+        position: absolute;
+        inset: 2px 0 auto;
+        color: var(--ghost);
+        font-family: "Share Tech Mono", monospace;
+        font-size: clamp(55px, 10vw, 105px);
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .big-result .value {
+        position: relative;
+        font-family: "Share Tech Mono", monospace;
+        font-size: clamp(55px, 10vw, 105px);
+        line-height: 1;
+        letter-spacing: 2px;
+        text-shadow: 0 0 1px rgba(30, 43, 44, 0.4);
+      }
+
+      .big-result .unit {
+        font-size: 15px;
+        letter-spacing: 2px;
+      }
+
+      .stints {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        border-top: 2px solid var(--ink);
+        margin-top: 8px;
+      }
+
+      .stint {
+        border-right: 2px solid var(--ink);
+        padding: 5px;
+      }
+
+      .stint:last-child {
+        border-right: 0;
+      }
+
+      .stint-name {
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+
+      .stint-value {
+        margin-top: 8px;
+        font-size: 24px;
+      }
+
+      .stint-meta {
+        margin-top: 3px;
+        font-size: 11px;
+      }
+
+      /* Tyres */
+      .tyre-layout {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .tyre-card {
+        position: relative;
+        border: 2px solid var(--ink);
+        min-height: 150px;
+        padding: 14px;
+      }
+
+      .tyre-card .tyre-input.field {
+        display: block;
         width: 100%;
+        height: auto;
+        margin: 12px 0 0;
+        padding: 3px 0 6px;
+        border: 0;
+        border-bottom: 2px solid var(--line);
+        border-radius: 0;
+        background: transparent;
+        color: var(--ink);
+        font:
+          18px "Share Tech Mono",
+          monospace;
+        outline: none;
       }
 
+      .tyre-card .tyre-input:focus {
+        background: rgba(255, 255, 255, 0.14);
+        border-bottom-color: var(--ink);
+      }
+
+      .tyre-card::before {
+        content: "";
+        position: absolute;
+        right: 12px;
+        bottom: 5px;
+        color: var(--ghost);
+        font-size: 56px;
+      }
+
+      .tyre-pos {
+        font-size: 13px;
+        letter-spacing: 2px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 6px;
+      }
+
+      .tyre-value {
+        margin-top: 19px;
+        font-size: 50px;
+        line-height: 1;
+      }
+
+      .tyre-value small {
+        font-size: 13px;
+        letter-spacing: 1px;
+      }
+
+      .pressure-grid {
+        margin-top: 18px;
+        border-top: 2px solid var(--ink);
+        padding-top: 14px;
+      }
+
+      /* Error */
+      .error {
+        color: var(--danger);
+        border-color: var(--danger) !important;
+      }
+
+      .notice {
+        margin-top: 12px;
+        font-size: 11px;
+        letter-spacing: 0.8px;
+      }
+
+      /* Footer */
       .footer {
-        flex-direction: column;
-        gap: 5px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 18px;
+        padding-top: 9px;
+        border-top: 2px solid var(--ink);
+        font-size: 10px;
+        letter-spacing: 1px;
       }
-    }
-  </style>
-</head>
 
-<body>
+      /* Mobile */
+      @media (max-width: 700px) {
+        body {
+          padding: 0;
+        }
 
-  <main class="screen">
+        .screen {
+          padding: 15px;
+          min-height: 100vh;
+        }
 
-    <header class="header">
-      <div>
-        <div class="brand">TrackEngineer</div>
-        <small>All calculations are best-effort estimates.</small>
-      </div>
-      <div class="status">GPS OK<br>SYSTEM READY</div>
-    </header>
+        .header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 12px;
+        }
 
-    <nav class="nav">
-      <button class="active" data-panel="fuel">FUEL STRATEGY</button>
-      <button data-panel="pressures">TYRE PRESSURES</button>
-    </nav>
+        .status {
+          text-align: left;
+        }
 
-    <!-- FUEL -->
-    <section id="fuel" class="panel active">
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
 
-      <div class="section-title">
-        <h2>FUEL CALCULATOR</h2>
-        <span>STRATEGY MODULE 01</span>
-      </div>
+        .tyre-layout {
+          grid-template-columns: 1fr;
+        }
 
-      <div class="mode-tabs">
-        <button data-mode="basic">BASIC</button>
-        <button class="active" data-mode="normal">NORMAL</button>
-        <button data-mode="pro">PRO</button>
-      </div>
+        .actions {
+          flex-direction: column;
+        }
 
-      <div id="basicFields" class="form-grid" style="display:none">
-        <div class="field">
-          <label>TOTAL LAPS *</label>
-          <input id="basicLaps" type="number" min="1" value="">
+        .action {
+          width: 100%;
+        }
+
+        .footer {
+          flex-direction: column;
+          gap: 5px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="screen">
+      <header class="header">
+        <div>
+          <div class="brand">RaceNG</div>
+          <small>All calculations are best-effort estimates.</small>
         </div>
-        <div class="field">
-          <label>FUEL PER LAP // L *</label>
-          <input id="basicFuel" type="number" min="0" step="0.1" value="">
-        </div>
-      </div>
+        <div class="status">GPS OK<br />SYSTEM READY</div>
+      </header>
 
-      <div id="normalFields" class="form-grid">
-        <div class="field">
-          <label>RACE TIME // HOURS *</label>
-          <input id="hours" type="number" min="0" value="">
-        </div>
-        <div class="field">
-          <label>RACE TIME // MINUTES *</label>
-          <input id="minutes" type="number" min="0" max="59" value="">
-        </div>
-        <div class="field">
-          <label>AVERAGE LAP // MINUTES *</label>
-          <input id="lapMin" type="number" min="0" value="">
-        </div>
-        <div class="field">
-          <label>AVERAGE LAP // SECONDS *</label>
-          <input id="lapSec" type="number" min="0" max="59" value="">
-        </div>
-        <div class="field">
-          <label>FUEL PER LAP // L *</label>
-          <input id="normalFuel" type="number" min="0" step="0.1" value="">
-        </div>
-        <div class="field">
-          <label>SAFETY MARGIN // %</label>
-          <input id="margin" type="number" min="0" value="">
-        </div>
-      </div>
+      <nav class="nav">
+        <button class="active" data-panel="fuel">FUEL STRATEGY</button>
+        <button data-panel="pressures">TYRE PRESSURES</button>
+      </nav>
 
-      <div id="proFields" style="display:none">
-        <div class="form-grid">
+      <!-- FUEL -->
+      <section id="fuel" class="panel active">
+        <div class="section-title">
+          <h2>FUEL CALCULATOR</h2>
+          <span>STRATEGY MODULE 01</span>
+        </div>
+
+        <div class="mode-tabs">
+          <button data-mode="basic">BASIC</button>
+          <button class="active" data-mode="normal">NORMAL</button>
+          <button data-mode="pro">PRO</button>
+        </div>
+
+        <div id="basicFields" class="form-grid" style="display: none">
           <div class="field">
-            <label>RACE TIME // HOURS *</label>
-            <input id="proHours" type="number" min="0" value="">
-          </div>
-          <div class="field">
-            <label>RACE TIME // MINUTES *</label>
-            <input id="proMinutes" type="number" min="0" max="59" value="">
-          </div>
-          <div class="field">
-            <label>AVERAGE LAP // MINUTES *</label>
-            <input id="proLapMin" type="number" min="0" value="">
-          </div>
-          <div class="field">
-            <label>AVERAGE LAP // SECONDS *</label>
-            <input id="proLapSec" type="number" min="0" max="59" value="">
+            <label>TOTAL LAPS *</label>
+            <input id="basicLaps" type="number" min="1" value="" />
           </div>
           <div class="field">
             <label>FUEL PER LAP // L *</label>
-            <input id="proFuel" type="number" min="0" step="0.1" value="">
+            <input id="basicFuel" type="number" min="0" step="0.1" value="" />
+          </div>
+        </div>
+
+        <div id="normalFields" class="form-grid">
+          <div class="field">
+            <label>RACE TIME // HOURS *</label>
+            <input id="hours" type="number" min="0" value="" />
           </div>
           <div class="field">
-            <label>TANK CAPACITY // L</label>
-            <input id="tank" type="number" min="0" step="0.1" value="">
+            <label>RACE TIME // MINUTES *</label>
+            <input id="minutes" type="number" min="0" max="59" value="" />
           </div>
           <div class="field">
-            <label>MANDATORY PITSTOPS</label>
-            <input id="stops" type="number" min="0" value="">
+            <label>AVERAGE LAP // MINUTES *</label>
+            <input id="lapMin" type="number" min="0" value="" />
+          </div>
+          <div class="field">
+            <label>AVERAGE LAP // SECONDS *</label>
+            <input id="lapSec" type="number" min="0" max="59" value="" />
+          </div>
+          <div class="field">
+            <label>FUEL PER LAP // L *</label>
+            <input id="normalFuel" type="number" min="0" step="0.1" value="" />
+          </div>
+          <div class="field">
+            <label>SAFETY MARGIN // %</label>
+            <input id="margin" type="number" min="0" value="" />
           </div>
         </div>
 
-        <div class="checks">
-          <label class="check">
-            <input id="formation" type="checkbox">
-            FORMATION LAP
-          </label>
-          <label class="check">
-            <input id="cooldown" type="checkbox">
-            COOL-DOWN LAP
-          </label>
-        </div>
-      </div>
+        <div id="proFields" style="display: none">
+          <div class="form-grid">
+            <div class="field">
+              <label>RACE TIME // HOURS *</label>
+              <input id="proHours" type="number" min="0" value="" />
+            </div>
+            <div class="field">
+              <label>RACE TIME // MINUTES *</label>
+              <input id="proMinutes" type="number" min="0" max="59" value="" />
+            </div>
+            <div class="field">
+              <label>AVERAGE LAP // MINUTES *</label>
+              <input id="proLapMin" type="number" min="0" value="" />
+            </div>
+            <div class="field">
+              <label>AVERAGE LAP // SECONDS *</label>
+              <input id="proLapSec" type="number" min="0" max="59" value="" />
+            </div>
+            <div class="field">
+              <label>FUEL PER LAP // L *</label>
+              <input id="proFuel" type="number" min="0" step="0.1" value="" />
+            </div>
+            <div class="field">
+              <label>TANK CAPACITY // L</label>
+              <input id="tank" type="number" min="0" step="0.1" value="" />
+            </div>
+            <div class="field">
+              <label>MANDATORY PITSTOPS</label>
+              <input id="stops" type="number" min="0" value="" />
+            </div>
+          </div>
 
-      <div class="actions">
-        <button class="action" onclick="calculateFuel()">CALCULATE FUEL</button>
-        <button class="action secondary" id="btnResetFuel" onclick="resetFuel()">RESET</button>
-        <button class="action secondary" id="btnCopyFuel" onclick="copyFuel()">COPY STRATEGY</button>
-      </div>
-
-      <div class="result-shell">
-        <div class="result-header">
-          <span>CALCULATED OUTPUT</span>
-          <span id="fuelModeLabel">NORMAL</span>
-        </div>
-
-        <div class="big-result">
-          <div class="ghost"></div>
-          <div class="value" id="fuelResult"></div>
-          <span class="unit">LITERS TOTAL FUEL</span>
-        </div>
-
-        <div id="fuelMeta" class="notice"></div>
-
-        <div id="stints" class="stints"></div>
-      </div>
-    </section>
-
-    <!-- PRESSURES -->
-    <section id="pressures" class="panel">
-
-      <div class="section-title">
-        <h2>TYRE PRESSURES</h2>
-        <span>COMPENSATION MODULE 02</span>
-      </div>
-
-      <div class="form-grid">
-        <div class="field">
-          <label>AMBIENT TEMP // BEFORE °C *</label>
-          <input id="tempBefore" type="number" value="">
-        </div>
-        <div class="field">
-          <label>AMBIENT TEMP // AFTER °C *</label>
-          <input id="tempAfter" type="number" value="">
-        </div>
-        <div class="field">
-          <label>FRONT DUCT // BEFORE</label>
-          <input id="frontBefore" type="number" min="0" value="">
-        </div>
-        <div class="field">
-          <label>FRONT DUCT // AFTER</label>
-          <input id="frontAfter" type="number" min="0" value="">
-        </div>
-        <div class="field">
-          <label>REAR DUCT // BEFORE</label>
-          <input id="rearBefore" type="number" min="0" value="">
-        </div>
-        <div class="field">
-          <label>REAR DUCT // AFTER</label>
-          <input id="rearAfter" type="number" min="0" value="">
-        </div>
-      </div>
-
-      <div class="tyre-layout pressure-grid">
-        <div class="tyre-card">
-          <div class="tyre-pos">FL // FRONT LEFT *</div>
-          <input class="field tyre-input" id="fl" type="number" step="0.1" value="">
-          <div class="tyre-value"><span id="flResult"></span> <small>PSI</small></div>
+          <div class="checks">
+            <label class="check">
+              <input id="formation" type="checkbox" />
+              FORMATION LAP
+            </label>
+            <label class="check">
+              <input id="cooldown" type="checkbox" />
+              COOL-DOWN LAP
+            </label>
+          </div>
         </div>
 
-        <div class="tyre-card">
-          <div class="tyre-pos">FR // FRONT RIGHT *</div>
-          <input class="field tyre-input" id="fr" type="number" step="0.1" value="">
-          <div class="tyre-value"><span id="frResult"></span> <small>PSI</small></div>
+        <div class="actions">
+          <button class="action" onclick="calculateFuel()">
+            CALCULATE FUEL
+          </button>
+          <button
+            class="action secondary"
+            id="btnResetFuel"
+            onclick="resetFuel()"
+          >
+            RESET
+          </button>
+          <button
+            class="action secondary"
+            id="btnCopyFuel"
+            onclick="copyFuel()"
+          >
+            COPY STRATEGY
+          </button>
         </div>
 
-        <div class="tyre-card">
-          <div class="tyre-pos">RL // REAR LEFT *</div>
-          <input class="field tyre-input" id="rl" type="number" step="0.1" value="">
-          <div class="tyre-value"><span id="rlResult"></span> <small>PSI</small></div>
+        <div class="result-shell">
+          <div class="result-header">
+            <span>CALCULATED OUTPUT</span>
+            <span id="fuelModeLabel">NORMAL</span>
+          </div>
+
+          <div class="big-result">
+            <div class="ghost"></div>
+            <div class="value" id="fuelResult"></div>
+            <span class="unit">LITERS TOTAL FUEL</span>
+          </div>
+
+          <div id="fuelMeta" class="notice"></div>
+
+          <div id="stints" class="stints"></div>
+        </div>
+      </section>
+
+      <!-- PRESSURES -->
+      <section id="pressures" class="panel">
+        <div class="section-title">
+          <h2>TYRE PRESSURES</h2>
+          <span>COMPENSATION MODULE 02</span>
         </div>
 
-        <div class="tyre-card">
-          <div class="tyre-pos">RR // REAR RIGHT *</div>
-          <input class="field tyre-input" id="rr" type="number" step="0.1" value="">
-          <div class="tyre-value"><span id="rrResult"></span> <small>PSI</small></div>
+        <div class="form-grid">
+          <div class="field">
+            <label>AMBIENT TEMP // BEFORE °C *</label>
+            <input id="tempBefore" type="number" value="" />
+          </div>
+          <div class="field">
+            <label>AMBIENT TEMP // AFTER °C *</label>
+            <input id="tempAfter" type="number" value="" />
+          </div>
+          <div class="field">
+            <label>FRONT DUCT // BEFORE</label>
+            <input id="frontBefore" type="number" min="0" value="" />
+          </div>
+          <div class="field">
+            <label>FRONT DUCT // AFTER</label>
+            <input id="frontAfter" type="number" min="0" value="" />
+          </div>
+          <div class="field">
+            <label>REAR DUCT // BEFORE</label>
+            <input id="rearBefore" type="number" min="0" value="" />
+          </div>
+          <div class="field">
+            <label>REAR DUCT // AFTER</label>
+            <input id="rearAfter" type="number" min="0" value="" />
+          </div>
         </div>
-      </div>
 
-      <div class="actions">
-        <button class="action" onclick="calculatePressure()">CALCULATE PRESSURES</button>
-        <button class="action secondary" id="btnResetPressure" onclick="resetPressure()">RESET</button>
-        <button class="action secondary" id="btnCopyPressure" onclick="copyPressure()">COPY PRESSURES</button>
-      </div>
+        <div class="tyre-layout pressure-grid">
+          <div class="tyre-card">
+            <div class="tyre-pos">FL // FRONT LEFT *</div>
+            <input
+              class="field tyre-input"
+              id="fl"
+              type="number"
+              step="0.1"
+              value=""
+            />
+            <div class="tyre-value">
+              <span id="flResult"></span> <small>PSI</small>
+            </div>
+          </div>
 
+          <div class="tyre-card">
+            <div class="tyre-pos">FR // FRONT RIGHT *</div>
+            <input
+              class="field tyre-input"
+              id="fr"
+              type="number"
+              step="0.1"
+              value=""
+            />
+            <div class="tyre-value">
+              <span id="frResult"></span> <small>PSI</small>
+            </div>
+          </div>
 
+          <div class="tyre-card">
+            <div class="tyre-pos">RL // REAR LEFT *</div>
+            <input
+              class="field tyre-input"
+              id="rl"
+              type="number"
+              step="0.1"
+              value=""
+            />
+            <div class="tyre-value">
+              <span id="rlResult"></span> <small>PSI</small>
+            </div>
+          </div>
 
-    </section>
+          <div class="tyre-card">
+            <div class="tyre-pos">RR // REAR RIGHT *</div>
+            <input
+              class="field tyre-input"
+              id="rr"
+              type="number"
+              step="0.1"
+              value=""
+            />
+            <div class="tyre-value">
+              <span id="rrResult"></span> <small>PSI</small>
+            </div>
+          </div>
+        </div>
 
-    <footer class="footer">
-      <span>v 3.0</span>
-      <span>KEYS: ENTER CALCULATE // R RESET // C COPY</span>
-    </footer>
+        <div class="actions">
+          <button class="action" onclick="calculatePressure()">
+            CALCULATE PRESSURES
+          </button>
+          <button
+            class="action secondary"
+            id="btnResetPressure"
+            onclick="resetPressure()"
+          >
+            RESET
+          </button>
+          <button
+            class="action secondary"
+            id="btnCopyPressure"
+            onclick="copyPressure()"
+          >
+            COPY PRESSURES
+          </button>
+        </div>
+      </section>
 
-  </main>
+      <footer class="footer">
+        <span>v 3.0</span>
+        <span>KEYS: ENTER CALCULATE // R RESET // C COPY</span>
+      </footer>
+    </main>
 
-  <script>
-    const STATE_KEY = "rt_assistant_state_v3";
-    let currentMode = "normal";
+    <script>
+      const STATE_KEY = "rt_assistant_state_v3";
+      let currentMode = "normal";
 
-    // ----------------------------------------------------
-    // STORAGE & INIT
-    // ----------------------------------------------------
-    function saveInputs() {
-      const state = {
-        mode: currentMode,
-        inputs: {}
-      };
+      // ----------------------------------------------------
+      // STORAGE & INIT
+      // ----------------------------------------------------
+      function saveInputs() {
+        const state = {
+          mode: currentMode,
+          inputs: {},
+        };
 
-      const allInputs = document.querySelectorAll("input");
-      allInputs.forEach(inp => {
-        if (inp.id) {
-          state.inputs[inp.id] = inp.type === "checkbox" ? inp.checked : inp.value;
-        }
-      });
-      localStorage.setItem(STATE_KEY, JSON.stringify(state));
-    }
-
-    function loadInputs() {
-      try {
-        const saved = localStorage.getItem(STATE_KEY);
-        if (saved) {
-          const state = JSON.parse(saved);
-          if (state.mode) {
-            document.querySelector(`.mode-tabs button[data-mode="${state.mode}"]`)?.click();
+        const allInputs = document.querySelectorAll("input");
+        allInputs.forEach((inp) => {
+          if (inp.id) {
+            state.inputs[inp.id] =
+              inp.type === "checkbox" ? inp.checked : inp.value;
           }
-          if (state.inputs) {
-            Object.entries(state.inputs).forEach(([id, val]) => {
-              const el = document.getElementById(id);
-              if (el) {
-                if (el.type === "checkbox") el.checked = val;
-                else el.value = val;
-              }
-            });
-          }
-        }
-      } catch (e) {
-        console.warn("Could not load state", e);
-      }
-      checkResetState();
-    }
-
-    document.addEventListener("input", () => {
-      saveInputs();
-      checkResetState();
-    });
-
-    // ----------------------------------------------------
-    // UI NAVIGATION
-    // ----------------------------------------------------
-    const modeButtons = document.querySelectorAll(".mode-tabs button");
-    modeButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        currentMode = btn.dataset.mode;
-
-        modeButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        document.getElementById("basicFields").style.display = currentMode === "basic" ? "grid" : "none";
-        document.getElementById("normalFields").style.display = currentMode === "normal" ? "grid" : "none";
-        document.getElementById("proFields").style.display = currentMode === "pro" ? "block" : "none";
-        document.getElementById("fuelModeLabel").textContent = currentMode.toUpperCase();
-
-        saveInputs();
-      });
-    });
-
-    document.querySelectorAll(".nav button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.panel).classList.add("active");
-      });
-    });
-
-    // ----------------------------------------------------
-    // HELPERS
-    // ----------------------------------------------------
-    function n(id) {
-      const val = document.getElementById(id).value;
-      if (val === "") return NaN;
-      return parseFloat(val);
-    }
-
-    function clearErrors(panelId) {
-      document.querySelectorAll(`#${panelId} .field input`).forEach(el => el.classList.remove("error"));
-      document.querySelectorAll(`#${panelId} .tyre-input`).forEach(el => el.classList.remove("error"));
-    }
-
-    function markError(id) {
-      document.getElementById(id).classList.add("error");
-    }
-
-    function checkResetState() {
-      const fuelInputs = Array.from(document.querySelectorAll("#fuel input"));
-      const fuelEmpty = fuelInputs.every(i => (i.type === "checkbox" ? !i.checked : i.value === ""));
-      document.getElementById("btnResetFuel").disabled = fuelEmpty;
-
-      const pressInputs = Array.from(document.querySelectorAll("#pressures input"));
-      const pressEmpty = pressInputs.every(i => i.value === "");
-      document.getElementById("btnResetPressure").disabled = pressEmpty;
-    }
-
-    // ----------------------------------------------------
-    // FUEL CALCULATOR
-    // ----------------------------------------------------
-    function calculateFuel() {
-      clearErrors("fuel");
-      const fuelMeta = document.getElementById("fuelMeta");
-      let laps = 0;
-      let fuel = 0;
-      let margin = 0;
-      let hasError = false;
-
-      function getPair(id1, mult1, id2, mult2) {
-        const v1 = document.getElementById(id1).value;
-        const v2 = document.getElementById(id2).value;
-        if (v1 === "" && v2 === "") return null;
-        return (parseFloat(v1) || 0) * mult1 + (parseFloat(v2) || 0) * mult2;
+        });
+        localStorage.setItem(STATE_KEY, JSON.stringify(state));
       }
 
-      if (currentMode === "basic") {
-        const vLaps = document.getElementById("basicLaps").value;
-        const vFuel = document.getElementById("basicFuel").value;
-        if (vLaps === "") { markError("basicLaps"); hasError = true; }
-        if (vFuel === "") { markError("basicFuel"); hasError = true; }
-        if (!hasError) {
-          laps = Math.ceil(parseFloat(vLaps));
-          fuel = parseFloat(vFuel);
-          if (laps <= 0) { markError("basicLaps"); hasError = true; }
-          if (fuel <= 0) { markError("basicFuel"); hasError = true; }
-        }
-      }
-
-      if (currentMode === "normal") {
-        const raceSeconds = getPair("hours", 3600, "minutes", 60);
-        const lapSeconds = getPair("lapMin", 60, "lapSec", 1);
-        const fStr = document.getElementById("normalFuel").value;
-
-        if (raceSeconds === null) { markError("hours"); markError("minutes"); hasError = true; }
-        if (lapSeconds === null) { markError("lapMin"); markError("lapSec"); hasError = true; }
-        if (fStr === "") { markError("normalFuel"); hasError = true; }
-
-        if (!hasError) {
-          if (raceSeconds <= 0) { markError("hours"); markError("minutes"); hasError = true; }
-          if (lapSeconds <= 0) { markError("lapMin"); markError("lapSec"); hasError = true; }
-          if (!hasError) {
-            laps = Math.ceil(raceSeconds / lapSeconds);
-            fuel = parseFloat(fStr);
-            const m = n("margin");
-            margin = isNaN(m) ? 0 : m;
-          }
-        }
-      }
-
-      if (currentMode === "pro") {
-        const raceSeconds = getPair("proHours", 3600, "proMinutes", 60);
-        const lapSeconds = getPair("proLapMin", 60, "proLapSec", 1);
-        const fStr = document.getElementById("proFuel").value;
-
-        if (raceSeconds === null) { markError("proHours"); markError("proMinutes"); hasError = true; }
-        if (lapSeconds === null) { markError("proLapMin"); markError("proLapSec"); hasError = true; }
-        if (fStr === "") { markError("proFuel"); hasError = true; }
-
-        if (!hasError) {
-          if (raceSeconds <= 0) { markError("proHours"); markError("proMinutes"); hasError = true; }
-          if (lapSeconds <= 0) { markError("proLapMin"); markError("proLapSec"); hasError = true; }
-          if (!hasError) {
-            laps = Math.ceil(raceSeconds / lapSeconds);
-            if (document.getElementById("formation").checked) laps++;
-            if (document.getElementById("cooldown").checked) laps++;
-            fuel = parseFloat(fStr);
-          }
-        }
-      }
-
-      if (hasError) {
-        document.getElementById("fuelResult").textContent = "ERR";
-        fuelMeta.textContent = "MISSING OR INVALID DATA // CHECK INPUTS";
-        fuelMeta.classList.add("error");
-        document.getElementById("stints").innerHTML = "";
-        return;
-      }
-
-      fuelMeta.classList.remove("error");
-
-      const safetyFactor = 1 + (margin / 100);
-      const totalFuelL = laps * fuel * safetyFactor;
-      document.getElementById("fuelResult").textContent = totalFuelL.toFixed(2);
-
-      let meta = `${laps} LAPS // ${fuel.toFixed(2)} L/LAP`;
-      if (margin > 0) meta += ` // +${margin}% SAFETY`;
-      fuelMeta.textContent = meta;
-
-      // Advanced Stint Logic from index.html
-      const container = document.getElementById("stints");
-      container.innerHTML = "";
-
-      const tankVal = currentMode === "pro" ? document.getElementById("tank").value : "";
-      const tankL = parseFloat(tankVal) || 0;
-      const stopsVal = currentMode === "pro" ? document.getElementById("stops").value : "";
-      const mandStops = parseInt(stopsVal) || 0;
-
-      let stints = [];
-      let lapCounter = 0;
-
-      if (currentMode === "pro") {
-        if (tankL > 0) {
-          const maxLapsPerStint = Math.floor(tankL / (fuel * safetyFactor));
-          const safeMaxLaps = Math.max(1, maxLapsPerStint);
-          let remainingLaps = laps;
-          let stintIndex = 0;
-          while (remainingLaps > 0) {
-            if (remainingLaps * fuel * safetyFactor <= tankL) {
-              const stintLaps = remainingLaps;
-              const stintFuel = stintLaps * fuel * safetyFactor;
-              stints.push({ index: stintIndex, laps: stintLaps, fuel: stintFuel, startLap: lapCounter + 1, endLap: lapCounter + stintLaps });
-              lapCounter += stintLaps;
-              remainingLaps = 0;
-            } else {
-              const stintLaps = safeMaxLaps;
-              const stintFuel = tankL; // Fill to max tank capacity
-              stints.push({ index: stintIndex, laps: stintLaps, fuel: stintFuel, startLap: lapCounter + 1, endLap: lapCounter + stintLaps });
-              lapCounter += stintLaps;
-              remainingLaps -= stintLaps;
+      function loadInputs() {
+        try {
+          const saved = localStorage.getItem(STATE_KEY);
+          if (saved) {
+            const state = JSON.parse(saved);
+            if (state.mode) {
+              document
+                .querySelector(`.mode-tabs button[data-mode="${state.mode}"]`)
+                ?.click();
             }
-            stintIndex++;
+            if (state.inputs) {
+              Object.entries(state.inputs).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                  if (el.type === "checkbox") el.checked = val;
+                  else el.value = val;
+                }
+              });
+            }
+          }
+        } catch (e) {
+          console.warn("Could not load state", e);
+        }
+        checkResetState();
+      }
+
+      document.addEventListener("input", () => {
+        saveInputs();
+        checkResetState();
+      });
+
+      // ----------------------------------------------------
+      // UI NAVIGATION
+      // ----------------------------------------------------
+      const modeButtons = document.querySelectorAll(".mode-tabs button");
+      modeButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentMode = btn.dataset.mode;
+
+          modeButtons.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          document.getElementById("basicFields").style.display =
+            currentMode === "basic" ? "grid" : "none";
+          document.getElementById("normalFields").style.display =
+            currentMode === "normal" ? "grid" : "none";
+          document.getElementById("proFields").style.display =
+            currentMode === "pro" ? "block" : "none";
+          document.getElementById("fuelModeLabel").textContent =
+            currentMode.toUpperCase();
+
+          saveInputs();
+        });
+      });
+
+      document.querySelectorAll(".nav button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".nav button")
+            .forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll(".panel")
+            .forEach((p) => p.classList.remove("active"));
+
+          btn.classList.add("active");
+          document.getElementById(btn.dataset.panel).classList.add("active");
+        });
+      });
+
+      // ----------------------------------------------------
+      // HELPERS
+      // ----------------------------------------------------
+      function n(id) {
+        const val = document.getElementById(id).value;
+        if (val === "") return NaN;
+        return parseFloat(val);
+      }
+
+      function clearErrors(panelId) {
+        document
+          .querySelectorAll(`#${panelId} .field input`)
+          .forEach((el) => el.classList.remove("error"));
+        document
+          .querySelectorAll(`#${panelId} .tyre-input`)
+          .forEach((el) => el.classList.remove("error"));
+      }
+
+      function markError(id) {
+        document.getElementById(id).classList.add("error");
+      }
+
+      function checkResetState() {
+        const fuelInputs = Array.from(document.querySelectorAll("#fuel input"));
+        const fuelEmpty = fuelInputs.every((i) =>
+          i.type === "checkbox" ? !i.checked : i.value === "",
+        );
+        document.getElementById("btnResetFuel").disabled = fuelEmpty;
+
+        const pressInputs = Array.from(
+          document.querySelectorAll("#pressures input"),
+        );
+        const pressEmpty = pressInputs.every((i) => i.value === "");
+        document.getElementById("btnResetPressure").disabled = pressEmpty;
+      }
+
+      // ----------------------------------------------------
+      // FUEL CALCULATOR
+      // ----------------------------------------------------
+      function calculateFuel() {
+        clearErrors("fuel");
+        const fuelMeta = document.getElementById("fuelMeta");
+        let laps = 0;
+        let fuel = 0;
+        let margin = 0;
+        let hasError = false;
+
+        function getPair(id1, mult1, id2, mult2) {
+          const v1 = document.getElementById(id1).value;
+          const v2 = document.getElementById(id2).value;
+          if (v1 === "" && v2 === "") return null;
+          return (parseFloat(v1) || 0) * mult1 + (parseFloat(v2) || 0) * mult2;
+        }
+
+        if (currentMode === "basic") {
+          const vLaps = document.getElementById("basicLaps").value;
+          const vFuel = document.getElementById("basicFuel").value;
+          if (vLaps === "") {
+            markError("basicLaps");
+            hasError = true;
+          }
+          if (vFuel === "") {
+            markError("basicFuel");
+            hasError = true;
+          }
+          if (!hasError) {
+            laps = Math.ceil(parseFloat(vLaps));
+            fuel = parseFloat(vFuel);
+            if (laps <= 0) {
+              markError("basicLaps");
+              hasError = true;
+            }
+            if (fuel <= 0) {
+              markError("basicFuel");
+              hasError = true;
+            }
+          }
+        }
+
+        if (currentMode === "normal") {
+          const raceSeconds = getPair("hours", 3600, "minutes", 60);
+          const lapSeconds = getPair("lapMin", 60, "lapSec", 1);
+          const fStr = document.getElementById("normalFuel").value;
+
+          if (raceSeconds === null) {
+            markError("hours");
+            markError("minutes");
+            hasError = true;
+          }
+          if (lapSeconds === null) {
+            markError("lapMin");
+            markError("lapSec");
+            hasError = true;
+          }
+          if (fStr === "") {
+            markError("normalFuel");
+            hasError = true;
+          }
+
+          if (!hasError) {
+            if (raceSeconds <= 0) {
+              markError("hours");
+              markError("minutes");
+              hasError = true;
+            }
+            if (lapSeconds <= 0) {
+              markError("lapMin");
+              markError("lapSec");
+              hasError = true;
+            }
+            if (!hasError) {
+              laps = Math.ceil(raceSeconds / lapSeconds);
+              fuel = parseFloat(fStr);
+              const m = n("margin");
+              margin = isNaN(m) ? 0 : m;
+            }
+          }
+        }
+
+        if (currentMode === "pro") {
+          const raceSeconds = getPair("proHours", 3600, "proMinutes", 60);
+          const lapSeconds = getPair("proLapMin", 60, "proLapSec", 1);
+          const fStr = document.getElementById("proFuel").value;
+
+          if (raceSeconds === null) {
+            markError("proHours");
+            markError("proMinutes");
+            hasError = true;
+          }
+          if (lapSeconds === null) {
+            markError("proLapMin");
+            markError("proLapSec");
+            hasError = true;
+          }
+          if (fStr === "") {
+            markError("proFuel");
+            hasError = true;
+          }
+
+          if (!hasError) {
+            if (raceSeconds <= 0) {
+              markError("proHours");
+              markError("proMinutes");
+              hasError = true;
+            }
+            if (lapSeconds <= 0) {
+              markError("proLapMin");
+              markError("proLapSec");
+              hasError = true;
+            }
+            if (!hasError) {
+              laps = Math.ceil(raceSeconds / lapSeconds);
+              if (document.getElementById("formation").checked) laps++;
+              if (document.getElementById("cooldown").checked) laps++;
+              fuel = parseFloat(fStr);
+            }
+          }
+        }
+
+        if (hasError) {
+          document.getElementById("fuelResult").textContent = "ERR";
+          fuelMeta.textContent = "MISSING OR INVALID DATA // CHECK INPUTS";
+          fuelMeta.classList.add("error");
+          document.getElementById("stints").innerHTML = "";
+          return;
+        }
+
+        fuelMeta.classList.remove("error");
+
+        const safetyFactor = 1 + margin / 100;
+        const totalFuelL = laps * fuel * safetyFactor;
+        document.getElementById("fuelResult").textContent =
+          totalFuelL.toFixed(2);
+
+        let meta = `${laps} LAPS // ${fuel.toFixed(2)} L/LAP`;
+        if (margin > 0) meta += ` // +${margin}% SAFETY`;
+        fuelMeta.textContent = meta;
+
+        // Advanced Stint Logic from index.html
+        const container = document.getElementById("stints");
+        container.innerHTML = "";
+
+        const tankVal =
+          currentMode === "pro" ? document.getElementById("tank").value : "";
+        const tankL = parseFloat(tankVal) || 0;
+        const stopsVal =
+          currentMode === "pro" ? document.getElementById("stops").value : "";
+        const mandStops = parseInt(stopsVal) || 0;
+
+        let stints = [];
+        let lapCounter = 0;
+
+        if (currentMode === "pro") {
+          if (tankL > 0) {
+            const maxLapsPerStint = Math.floor(tankL / (fuel * safetyFactor));
+            const safeMaxLaps = Math.max(1, maxLapsPerStint);
+            let remainingLaps = laps;
+            let stintIndex = 0;
+            while (remainingLaps > 0) {
+              if (remainingLaps * fuel * safetyFactor <= tankL) {
+                const stintLaps = remainingLaps;
+                const stintFuel = stintLaps * fuel * safetyFactor;
+                stints.push({
+                  index: stintIndex,
+                  laps: stintLaps,
+                  fuel: stintFuel,
+                  startLap: lapCounter + 1,
+                  endLap: lapCounter + stintLaps,
+                });
+                lapCounter += stintLaps;
+                remainingLaps = 0;
+              } else {
+                const stintLaps = safeMaxLaps;
+                const stintFuel = tankL; // Fill to max tank capacity
+                stints.push({
+                  index: stintIndex,
+                  laps: stintLaps,
+                  fuel: stintFuel,
+                  startLap: lapCounter + 1,
+                  endLap: lapCounter + stintLaps,
+                });
+                lapCounter += stintLaps;
+                remainingLaps -= stintLaps;
+              }
+              stintIndex++;
+            }
+          } else {
+            // No tank limit, just use mandatory stops
+            const numStints = mandStops + 1;
+            const baseLaps = Math.floor(laps / numStints);
+            const remainder = laps % numStints;
+            for (let i = 0; i < numStints; i++) {
+              const stintLaps = baseLaps + (i < remainder ? 1 : 0);
+              const stintFuel = stintLaps * fuel * safetyFactor;
+              stints.push({
+                index: i,
+                laps: stintLaps,
+                fuel: stintFuel,
+                startLap: lapCounter + 1,
+                endLap: lapCounter + stintLaps,
+              });
+              lapCounter += stintLaps;
+            }
           }
         } else {
-          // No tank limit, just use mandatory stops
-          const numStints = mandStops + 1;
-          const baseLaps = Math.floor(laps / numStints);
-          const remainder = laps % numStints;
-          for (let i = 0; i < numStints; i++) {
-            const stintLaps = baseLaps + (i < remainder ? 1 : 0);
-            const stintFuel = stintLaps * fuel * safetyFactor;
-            stints.push({ index: i, laps: stintLaps, fuel: stintFuel, startLap: lapCounter + 1, endLap: lapCounter + stintLaps });
-            lapCounter += stintLaps;
-          }
+          // Normal/Basic mode: 1 stint
+          stints.push({
+            index: 0,
+            laps: laps,
+            fuel: totalFuelL,
+            startLap: 1,
+            endLap: laps,
+          });
         }
-      } else {
-        // Normal/Basic mode: 1 stint
-        stints.push({ index: 0, laps: laps, fuel: totalFuelL, startLap: 1, endLap: laps });
-      }
 
-      // Store stints data on the container for copy usage later
-      window.lastStintsData = { stints, totalLaps: laps, totalFuelL };
+        // Store stints data on the container for copy usage later
+        window.lastStintsData = { stints, totalLaps: laps, totalFuelL };
 
-      stints.slice(0, 12).forEach(s => {
-        const card = document.createElement("div");
-        card.className = "stint";
-        card.innerHTML = `
+        stints.slice(0, 12).forEach((s) => {
+          const card = document.createElement("div");
+          card.className = "stint";
+          card.innerHTML = `
             <div class="stint-name">STINT ${String(s.index + 1).padStart(2, "0")}</div>
             <div class="stint-value">${s.fuel.toFixed(2)} L</div>
             <div class="stint-meta">${s.laps} LAPS</div>
         `;
-        container.appendChild(card);
-      });
-
-      document.getElementById("btnCopyFuel").disabled = false;
-      document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
-    }
-
-    function calculatePressure() {
-      clearErrors("pressures");
-      let hasError = false;
-
-      ["tempBefore", "tempAfter", "fl", "fr", "rl", "rr"].forEach(id => {
-        if (isNaN(n(id))) {
-          markError(id);
-          hasError = true;
-        }
-      });
-
-      if (hasError) {
-        ["fl", "fr", "rl", "rr"].forEach(id => {
-          document.getElementById(id + "Result").textContent = "ERR";
+          container.appendChild(card);
         });
-        return;
+
+        document.getElementById("btnCopyFuel").disabled = false;
+        document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
       }
 
-      const tempDelta = n("tempAfter") - n("tempBefore");
-      const tempComp = -0.1 * tempDelta;
+      function calculatePressure() {
+        clearErrors("pressures");
+        let hasError = false;
 
-      function ductDelta(before, after) {
-        if (isNaN(before) || isNaN(after) || before === after) return 0;
-        let delta = 0;
-        const start = Math.min(before, after);
-        const end = Math.max(before, after);
-        for (let i = start; i < end; i++) {
-          if (i === 1) delta += 0.3;
-          else delta += 0.2;
+        ["tempBefore", "tempAfter", "fl", "fr", "rl", "rr"].forEach((id) => {
+          if (isNaN(n(id))) {
+            markError(id);
+            hasError = true;
+          }
+        });
+
+        if (hasError) {
+          ["fl", "fr", "rl", "rr"].forEach((id) => {
+            document.getElementById(id + "Result").textContent = "ERR";
+          });
+          return;
         }
-        return before > after ? delta : -delta;
+
+        const tempDelta = n("tempAfter") - n("tempBefore");
+        const tempComp = -0.1 * tempDelta;
+
+        function ductDelta(before, after) {
+          if (isNaN(before) || isNaN(after) || before === after) return 0;
+          let delta = 0;
+          const start = Math.min(before, after);
+          const end = Math.max(before, after);
+          for (let i = start; i < end; i++) {
+            if (i === 1) delta += 0.3;
+            else delta += 0.2;
+          }
+          return before > after ? delta : -delta;
+        }
+
+        const frontComp = ductDelta(n("frontBefore"), n("frontAfter"));
+        const rearComp = ductDelta(n("rearBefore"), n("rearAfter"));
+
+        const values = {
+          fl: n("fl") + tempComp + frontComp,
+          fr: n("fr") + tempComp + frontComp,
+          rl: n("rl") + tempComp + rearComp,
+          rr: n("rr") + tempComp + rearComp,
+        };
+
+        Object.entries(values).forEach(([key, value]) => {
+          document.getElementById(key + "Result").textContent =
+            value.toFixed(1);
+        });
+
+        document.getElementById("btnCopyPressure").disabled = false;
+        document.getElementById("btnCopyPressure").textContent =
+          "COPY PRESSURES";
       }
 
-      const frontComp = ductDelta(n("frontBefore"), n("frontAfter"));
-      const rearComp = ductDelta(n("rearBefore"), n("rearAfter"));
+      // ----------------------------------------------------
+      // RESET & COPY
+      // ----------------------------------------------------
+      function resetFuel() {
+        clearErrors("fuel");
+        document.querySelectorAll("#fuel input").forEach((el) => {
+          if (el.type === "checkbox") el.checked = false;
+          else el.value = "";
+        });
 
-      const values = {
-        fl: n("fl") + tempComp + frontComp,
-        fr: n("fr") + tempComp + frontComp,
-        rl: n("rl") + tempComp + rearComp,
-        rr: n("rr") + tempComp + rearComp
-      };
+        document.getElementById("fuelResult").textContent = "";
+        document.getElementById("fuelMeta").textContent = "";
+        document.getElementById("fuelMeta").classList.remove("error");
+        document.getElementById("stints").innerHTML = "";
 
-      Object.entries(values).forEach(([key, value]) => {
-        document.getElementById(key + "Result").textContent = value.toFixed(1);
-      });
+        document.getElementById("btnCopyFuel").disabled = true;
+        document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
+        saveInputs();
+        checkResetState();
+      }
 
-      document.getElementById("btnCopyPressure").disabled = false;
-      document.getElementById("btnCopyPressure").textContent = "COPY PRESSURES";
-    }
+      function resetPressure() {
+        clearErrors("pressures");
+        ["fl", "fr", "rl", "rr"].forEach((id) => {
+          document.getElementById(id).value = "";
+          document.getElementById(id + "Result").textContent = "";
+        });
 
-    // ----------------------------------------------------
-    // RESET & COPY
-    // ----------------------------------------------------
-    function resetFuel() {
-      clearErrors("fuel");
-      document.querySelectorAll("#fuel input").forEach(el => {
-        if (el.type === "checkbox") el.checked = false;
-        else el.value = "";
-      });
+        [
+          "tempBefore",
+          "tempAfter",
+          "frontBefore",
+          "frontAfter",
+          "rearBefore",
+          "rearAfter",
+        ].forEach((id) => {
+          document.getElementById(id).value = "";
+        });
 
-      document.getElementById("fuelResult").textContent = "";
-      document.getElementById("fuelMeta").textContent = "";
-      document.getElementById("fuelMeta").classList.remove("error");
-      document.getElementById("stints").innerHTML = "";
+        document.getElementById("btnCopyPressure").disabled = true;
+        document.getElementById("btnCopyPressure").textContent =
+          "COPY PRESSURES";
+        saveInputs();
+        checkResetState();
+      }
 
-      document.getElementById("btnCopyFuel").disabled = true;
-      document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
-      saveInputs();
-      checkResetState();
-    }
+      async function copyFuel() {
+        const fuelResult = document.getElementById("fuelResult").textContent;
+        if (!fuelResult || fuelResult === "ERR") return;
 
-    function resetPressure() {
-      clearErrors("pressures");
-      ["fl", "fr", "rl", "rr"].forEach(id => {
-        document.getElementById(id).value = "";
-        document.getElementById(id + "Result").textContent = "";
-      });
+        const dateStr = new Date().toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
 
-      ["tempBefore", "tempAfter", "frontBefore", "frontAfter", "rearBefore", "rearAfter"].forEach(id => {
-        document.getElementById(id).value = "";
-      });
+        const mode = currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
 
-      document.getElementById("btnCopyPressure").disabled = true;
-      document.getElementById("btnCopyPressure").textContent = "COPY PRESSURES";
-      saveInputs();
-      checkResetState();
-    }
-
-    async function copyFuel() {
-      const fuelResult = document.getElementById("fuelResult").textContent;
-      if (!fuelResult || fuelResult === "ERR") return;
-
-      const dateStr = new Date().toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      const mode = currentMode.charAt(0).toUpperCase() + currentMode.slice(1);
-
-      let text = `RACETECH ASSISTANT - FUEL STRATEGY
+        let text = `RACENG - FUEL STRATEGY
 Date: ${dateStr}
 
 `;
-      text += `INPUTS:
+        text += `INPUTS:
 `;
-      text += `- Mode: ${mode}
+        text += `- Mode: ${mode}
 `;
 
-      let raceDuration = "";
-      let lapPace = "";
-      let fuelLap = "";
-      let marginStr = "";
+        let raceDuration = "";
+        let lapPace = "";
+        let fuelLap = "";
+        let marginStr = "";
 
-      if (currentMode === "basic") {
-        text += `- Race Duration: ${document.getElementById("basicLaps").value} Laps
+        if (currentMode === "basic") {
+          text += `- Race Duration: ${document.getElementById("basicLaps").value} Laps
 `;
-        text += `- Fuel per Lap: ${parseFloat(document.getElementById("basicFuel").value).toFixed(2)} L
+          text += `- Fuel per Lap: ${parseFloat(document.getElementById("basicFuel").value).toFixed(2)} L
 `;
-        text += `- Safety Margin: 0%
+          text += `- Safety Margin: 0%
 `;
-      } else if (currentMode === "normal") {
-        text += `- Race Duration: ${document.getElementById("hours").value || 0}h ${document.getElementById("minutes").value || 0}m
+        } else if (currentMode === "normal") {
+          text += `- Race Duration: ${document.getElementById("hours").value || 0}h ${document.getElementById("minutes").value || 0}m
 `;
-        text += `- Lap Pace: ${document.getElementById("lapMin").value || 0}m ${document.getElementById("lapSec").value || 0}s
+          text += `- Lap Pace: ${document.getElementById("lapMin").value || 0}m ${document.getElementById("lapSec").value || 0}s
 `;
-        text += `- Fuel per Lap: ${parseFloat(document.getElementById("normalFuel").value).toFixed(2)} L
+          text += `- Fuel per Lap: ${parseFloat(document.getElementById("normalFuel").value).toFixed(2)} L
 `;
-        text += `- Safety Margin: ${document.getElementById("margin").value || 0}%
+          text += `- Safety Margin: ${document.getElementById("margin").value || 0}%
 `;
-      } else if (currentMode === "pro") {
-        text += `- Race Duration: ${document.getElementById("proHours").value || 0}h ${document.getElementById("proMinutes").value || 0}m
+        } else if (currentMode === "pro") {
+          text += `- Race Duration: ${document.getElementById("proHours").value || 0}h ${document.getElementById("proMinutes").value || 0}m
 `;
-        text += `- Lap Pace: ${document.getElementById("proLapMin").value || 0}m ${document.getElementById("proLapSec").value || 0}s
+          text += `- Lap Pace: ${document.getElementById("proLapMin").value || 0}m ${document.getElementById("proLapSec").value || 0}s
 `;
-        text += `- Fuel per Lap: ${parseFloat(document.getElementById("proFuel").value).toFixed(2)} L
+          text += `- Fuel per Lap: ${parseFloat(document.getElementById("proFuel").value).toFixed(2)} L
 `;
-        if (n("tank") > 0) text += `- Tank Capacity: ${n("tank")} L
+          if (n("tank") > 0)
+            text += `- Tank Capacity: ${n("tank")} L
 `;
-        if (n("stops") > 0) text += `- Mandatory Stops: ${n("stops")}
+          if (n("stops") > 0)
+            text += `- Mandatory Stops: ${n("stops")}
 `;
-        text += `- Extra Laps: ${[document.getElementById("formation").checked ? "Formation" : "", document.getElementById("cooldown").checked ? "Cooldown" : ""].filter(Boolean).join(", ") || "None"}
+          text += `- Extra Laps: ${[document.getElementById("formation").checked ? "Formation" : "", document.getElementById("cooldown").checked ? "Cooldown" : ""].filter(Boolean).join(", ") || "None"}
 `;
-      }
+        }
 
-      text += `
+        text += `
 OUTPUTS:
 `;
 
-      if (window.lastStintsData) {
-        const d = window.lastStintsData;
-        text += `- Total Laps: ${d.totalLaps}
+        if (window.lastStintsData) {
+          const d = window.lastStintsData;
+          text += `- Total Laps: ${d.totalLaps}
 `;
-        d.stints.forEach(s => {
-          text += `- Stint ${s.index + 1}: ${s.fuel.toFixed(2)} L (Laps ${s.startLap}–${s.endLap})
+          d.stints.forEach((s) => {
+            text += `- Stint ${s.index + 1}: ${s.fuel.toFixed(2)} L (Laps ${s.startLap}–${s.endLap})
 `;
-        });
-        text += `- Total Fuel Required: ${d.totalFuelL.toFixed(2)} L`;
+          });
+          text += `- Total Fuel Required: ${d.totalFuelL.toFixed(2)} L`;
+        }
+
+        await navigator.clipboard.writeText(text);
+
+        const btn = document.getElementById("btnCopyFuel");
+        btn.textContent = "COPIED!";
+        btn.disabled = true;
       }
 
-      await navigator.clipboard.writeText(text);
+      async function copyPressure() {
+        const flResult = document.getElementById("flResult").textContent;
+        if (!flResult || flResult === "ERR") return;
 
-      const btn = document.getElementById("btnCopyFuel");
-      btn.textContent = "COPIED!";
-      btn.disabled = true;
-    }
+        const dateStr = new Date().toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
 
-    async function copyPressure() {
-      const flResult = document.getElementById("flResult").textContent;
-      if (!flResult || flResult === "ERR") return;
-
-      const dateStr = new Date().toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      let text = `RACETECH ASSISTANT - TYRE PRESSURES
+        let text = `RACENG - TYRE PRESSURES
 Date: ${dateStr}
 
 `;
 
-      text += `INPUTS:\n`;
-      text += `- Setup Pressures:\n`;
-      text += `  - Front Left: ${n("fl").toFixed(2)} psi\n`;
-      text += `  - Front Right: ${n("fr").toFixed(2)} psi
+        text += `INPUTS:\n`;
+        text += `- Setup Pressures:\n`;
+        text += `  - Front Left: ${n("fl").toFixed(2)} psi\n`;
+        text += `  - Front Right: ${n("fr").toFixed(2)} psi
 `;
-      text += `  - Rear Left: ${n("rl").toFixed(2)} psi
+        text += `  - Rear Left: ${n("rl").toFixed(2)} psi
 `;
-      text += `  - Rear Right: ${n("rr").toFixed(2)} psi
+        text += `  - Rear Right: ${n("rr").toFixed(2)} psi
 `;
 
-      if (!isNaN(n("tempBefore")) || !isNaN(n("tempAfter"))) {
-        text += `- Ambient Temperature:
+        if (!isNaN(n("tempBefore")) || !isNaN(n("tempAfter"))) {
+          text += `- Ambient Temperature:
 `;
-        text += `  - Before: ${isNaN(n("tempBefore")) ? '-' : n("tempBefore") + ' °C'}
+          text += `  - Before: ${isNaN(n("tempBefore")) ? "-" : n("tempBefore") + " °C"}
 `;
-        text += `  - After: ${isNaN(n("tempAfter")) ? '-' : n("tempAfter") + ' °C'}
+          text += `  - After: ${isNaN(n("tempAfter")) ? "-" : n("tempAfter") + " °C"}
 `;
-      }
-      if (!isNaN(n("frontBefore")) || !isNaN(n("frontAfter"))) {
-        text += `- Brake Ducts (Front):
+        }
+        if (!isNaN(n("frontBefore")) || !isNaN(n("frontAfter"))) {
+          text += `- Brake Ducts (Front):
 `;
-        text += `  - Before: ${n("frontBefore")}
+          text += `  - Before: ${n("frontBefore")}
 `;
-        text += `  - After: ${n("frontAfter")}
+          text += `  - After: ${n("frontAfter")}
 `;
-      }
-      if (!isNaN(n("rearBefore")) || !isNaN(n("rearAfter"))) {
-        text += `- Brake Ducts (Rear):
+        }
+        if (!isNaN(n("rearBefore")) || !isNaN(n("rearAfter"))) {
+          text += `- Brake Ducts (Rear):
 `;
-        text += `  - Before: ${n("rearBefore")}
+          text += `  - Before: ${n("rearBefore")}
 `;
-        text += `  - After: ${n("rearAfter")}
+          text += `  - After: ${n("rearAfter")}
 `;
-      }
+        }
 
-      text += `
+        text += `
 OUTPUTS:
 `;
 
-      const tDelta = !isNaN(n("tempAfter")) && !isNaN(n("tempBefore")) ? -0.1 * (n("tempAfter") - n("tempBefore")) : 0;
+        const tDelta =
+          !isNaN(n("tempAfter")) && !isNaN(n("tempBefore"))
+            ? -0.1 * (n("tempAfter") - n("tempBefore"))
+            : 0;
 
-      function ductD(before, after) {
-        if (isNaN(before) || isNaN(after) || before === after) return 0;
-        let delta = 0;
-        const start = Math.min(before, after);
-        const end = Math.max(before, after);
-        for (let i = start; i < end; i++) {
-          if (i === 1) delta += 0.3;
-          else delta += 0.2;
-        }
-        return before > after ? delta : -delta;
-      }
-
-      const fD = ductD(n("frontBefore"), n("frontAfter"));
-      const rD = ductD(n("rearBefore"), n("rearAfter"));
-
-      const cFL = n("fl") + tDelta + fD;
-      const cFR = n("fr") + tDelta + fD;
-      const cRL = n("rl") + tDelta + rD;
-      const cRR = n("rr") + tDelta + rD;
-
-      const chFL = tDelta + fD;
-      const chFR = tDelta + fD;
-      const chRL = tDelta + rD;
-      const chRR = tDelta + rD;
-
-      text += `- Front Left: ${cFL.toFixed(2)} psi (Change: ${chFL >= 0 ? '+' : ''}${chFL.toFixed(2)})
-`;
-      text += `- Front Right: ${cFR.toFixed(2)} psi (Change: ${chFR >= 0 ? '+' : ''}${chFR.toFixed(2)})
-`;
-      text += `- Rear Left: ${cRL.toFixed(2)} psi (Change: ${chRL >= 0 ? '+' : ''}${chRL.toFixed(2)})
-`;
-      text += `- Rear Right: ${cRR.toFixed(2)} psi (Change: ${chRR >= 0 ? '+' : ''}${chRR.toFixed(2)})`;
-
-      await navigator.clipboard.writeText(text);
-
-      const btn = document.getElementById("btnCopyPressure");
-      btn.textContent = "COPIED!";
-      btn.disabled = true;
-    }
-
-    // ----------------------------------------------------
-    // KEYBOARD SHORTCUTS
-    // ----------------------------------------------------
-    document.addEventListener("keydown", e => {
-      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
-
-      const tag = document.activeElement.tagName;
-
-      if (e.key === "Enter" && tag === "INPUT") {
-        const activePanel = document.querySelector(".panel.active");
-        if (activePanel.id === "fuel") calculateFuel();
-        if (activePanel.id === "pressures") calculatePressure();
-      }
-
-      if (tag !== "INPUT") {
-        if (e.key.toLowerCase() === "r") {
-          const activePanel = document.querySelector(".panel.active");
-          if (activePanel.id === "fuel") resetFuel();
-          else resetPressure();
+        function ductD(before, after) {
+          if (isNaN(before) || isNaN(after) || before === after) return 0;
+          let delta = 0;
+          const start = Math.min(before, after);
+          const end = Math.max(before, after);
+          for (let i = start; i < end; i++) {
+            if (i === 1) delta += 0.3;
+            else delta += 0.2;
+          }
+          return before > after ? delta : -delta;
         }
 
-        if (e.key.toLowerCase() === "c") {
+        const fD = ductD(n("frontBefore"), n("frontAfter"));
+        const rD = ductD(n("rearBefore"), n("rearAfter"));
+
+        const cFL = n("fl") + tDelta + fD;
+        const cFR = n("fr") + tDelta + fD;
+        const cRL = n("rl") + tDelta + rD;
+        const cRR = n("rr") + tDelta + rD;
+
+        const chFL = tDelta + fD;
+        const chFR = tDelta + fD;
+        const chRL = tDelta + rD;
+        const chRR = tDelta + rD;
+
+        text += `- Front Left: ${cFL.toFixed(2)} psi (Change: ${chFL >= 0 ? "+" : ""}${chFL.toFixed(2)})
+`;
+        text += `- Front Right: ${cFR.toFixed(2)} psi (Change: ${chFR >= 0 ? "+" : ""}${chFR.toFixed(2)})
+`;
+        text += `- Rear Left: ${cRL.toFixed(2)} psi (Change: ${chRL >= 0 ? "+" : ""}${chRL.toFixed(2)})
+`;
+        text += `- Rear Right: ${cRR.toFixed(2)} psi (Change: ${chRR >= 0 ? "+" : ""}${chRR.toFixed(2)})`;
+
+        await navigator.clipboard.writeText(text);
+
+        const btn = document.getElementById("btnCopyPressure");
+        btn.textContent = "COPIED!";
+        btn.disabled = true;
+      }
+
+      // ----------------------------------------------------
+      // KEYBOARD SHORTCUTS
+      // ----------------------------------------------------
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+
+        const tag = document.activeElement.tagName;
+
+        if (e.key === "Enter" && tag === "INPUT") {
           const activePanel = document.querySelector(".panel.active");
-          if (activePanel.id === "fuel") {
-            if (!document.getElementById("btnCopyFuel").disabled) copyFuel();
-          } else {
-            if (!document.getElementById("btnCopyPressure").disabled) copyPressure();
+          if (activePanel.id === "fuel") calculateFuel();
+          if (activePanel.id === "pressures") calculatePressure();
+        }
+
+        if (tag !== "INPUT") {
+          if (e.key.toLowerCase() === "r") {
+            const activePanel = document.querySelector(".panel.active");
+            if (activePanel.id === "fuel") resetFuel();
+            else resetPressure();
+          }
+
+          if (e.key.toLowerCase() === "c") {
+            const activePanel = document.querySelector(".panel.active");
+            if (activePanel.id === "fuel") {
+              if (!document.getElementById("btnCopyFuel").disabled) copyFuel();
+            } else {
+              if (!document.getElementById("btnCopyPressure").disabled)
+                copyPressure();
+            }
           }
         }
-      }
-    });
+      });
 
-    window.addEventListener("load", loadInputs);
-
-  </script>
-
-</body>
-
+      window.addEventListener("load", loadInputs);
+    </script>
+  </body>
 </html>
