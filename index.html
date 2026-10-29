@@ -532,7 +532,7 @@
           <div class="brand">RaceNG</div>
           <small>All calculations are best-effort estimates.</small>
         </div>
-        <div class="status">GPS OK<br />SYSTEM READY</div>
+        <div class="status" id="status" aria-live="polite">AWAITING INPUT</div>
       </header>
 
       <nav class="nav">
@@ -890,9 +890,18 @@
       // ----------------------------------------------------
       const screenEl = document.querySelector(".screen");
 
-      // "awake": everything lit, "input": form lit, "result": output lit
+      const STATUS_TEXT = {
+        awake: "AWAITING INPUT",
+        input: "INPUT MODE // ENTER DATA",
+        result: "CALCULATION COMPLETE",
+        error: "DATA ERROR // CHECK INPUTS",
+      };
+
+      // "awake": everything lit, "input": form lit, "result": output lit,
+      // "error": same lighting as awake with an error status
       function setLcd(state) {
-        screenEl.dataset.lcd = state;
+        screenEl.dataset.lcd = state === "error" ? "awake" : state;
+        document.getElementById("status").textContent = STATUS_TEXT[state];
       }
 
       const INPUT_SELECTOR = "input, select, textarea, .check";
@@ -1069,7 +1078,7 @@
           fuelMeta.textContent = "MISSING OR INVALID DATA // CHECK INPUTS";
           fuelMeta.classList.add("error");
           document.getElementById("stints").innerHTML = "";
-          setLcd("awake");
+          setLcd("error");
           return;
         }
 
@@ -1195,7 +1204,7 @@
           ["fl", "fr", "rl", "rr"].forEach((id) => {
             document.getElementById(id + "Result").textContent = "ERR";
           });
-          setLcd("awake");
+          setLcd("error");
           return;
         }
 
