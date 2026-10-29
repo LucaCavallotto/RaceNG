@@ -119,6 +119,31 @@
         color: var(--lcd);
       }
 
+      /* MoTeC-style lit / unlit zones: unlit segments fade into the backlight */
+      .zone-in,
+      .zone-in *,
+      .zone-out,
+      .zone-out * {
+        transition:
+          color 0.35s ease,
+          background-color 0.35s ease,
+          border-color 0.35s ease,
+          text-shadow 0.35s ease;
+      }
+
+      [data-lcd="input"] .zone-out,
+      [data-lcd="result"] .zone-in {
+        --ink: rgba(10, 26, 51, 0.2);
+        --ink-soft: rgba(10, 26, 51, 0.14);
+        --line: rgba(10, 26, 51, 0.12);
+        --ghost: rgba(10, 26, 51, 0.05);
+        --placeholder: rgba(10, 26, 51, 0.12);
+      }
+
+      [data-lcd="input"] .zone-out .value {
+        text-shadow: none;
+      }
+
       /* Main panels */
       .panel {
         display: none;
@@ -501,7 +526,7 @@
   </head>
 
   <body>
-    <main class="screen">
+    <main class="screen" data-lcd="awake">
       <header class="header">
         <div>
           <div class="brand">RaceNG</div>
@@ -522,13 +547,13 @@
           <span>STRATEGY MODULE 01</span>
         </div>
 
-        <div class="mode-tabs">
+        <div class="mode-tabs zone-in">
           <button data-mode="basic">BASIC</button>
           <button class="active" data-mode="normal">NORMAL</button>
           <button data-mode="pro">PRO</button>
         </div>
 
-        <div id="basicFields" class="form-grid" style="display: none">
+        <div id="basicFields" class="form-grid zone-in" style="display: none">
           <div class="field">
             <label>TOTAL LAPS *</label>
             <input id="basicLaps" type="number" min="1" value="" />
@@ -539,7 +564,7 @@
           </div>
         </div>
 
-        <div id="normalFields" class="form-grid">
+        <div id="normalFields" class="form-grid zone-in">
           <div class="field">
             <label>RACE TIME // HOURS *</label>
             <input id="hours" type="number" min="0" value="" />
@@ -566,7 +591,7 @@
           </div>
         </div>
 
-        <div id="proFields" style="display: none">
+        <div id="proFields" class="zone-in" style="display: none">
           <div class="form-grid">
             <div class="field">
               <label>RACE TIME // HOURS *</label>
@@ -630,7 +655,7 @@
           </button>
         </div>
 
-        <div class="result-shell">
+        <div class="result-shell zone-out">
           <div class="result-header">
             <span>CALCULATED OUTPUT</span>
             <span id="fuelModeLabel">NORMAL</span>
@@ -655,7 +680,7 @@
           <span>COMPENSATION MODULE 02</span>
         </div>
 
-        <div class="form-grid">
+        <div class="form-grid zone-in">
           <div class="field">
             <label>AMBIENT TEMP // BEFORE °C *</label>
             <input id="tempBefore" type="number" value="" />
@@ -684,57 +709,57 @@
 
         <div class="tyre-layout pressure-grid">
           <div class="tyre-card">
-            <div class="tyre-pos">FL // FRONT LEFT *</div>
+            <div class="tyre-pos zone-in">FL // FRONT LEFT *</div>
             <input
-              class="field tyre-input"
+              class="field tyre-input zone-in"
               id="fl"
               type="number"
               step="0.1"
               value=""
             />
-            <div class="tyre-value">
+            <div class="tyre-value zone-out">
               <span id="flResult"></span> <small>PSI</small>
             </div>
           </div>
 
           <div class="tyre-card">
-            <div class="tyre-pos">FR // FRONT RIGHT *</div>
+            <div class="tyre-pos zone-in">FR // FRONT RIGHT *</div>
             <input
-              class="field tyre-input"
+              class="field tyre-input zone-in"
               id="fr"
               type="number"
               step="0.1"
               value=""
             />
-            <div class="tyre-value">
+            <div class="tyre-value zone-out">
               <span id="frResult"></span> <small>PSI</small>
             </div>
           </div>
 
           <div class="tyre-card">
-            <div class="tyre-pos">RL // REAR LEFT *</div>
+            <div class="tyre-pos zone-in">RL // REAR LEFT *</div>
             <input
-              class="field tyre-input"
+              class="field tyre-input zone-in"
               id="rl"
               type="number"
               step="0.1"
               value=""
             />
-            <div class="tyre-value">
+            <div class="tyre-value zone-out">
               <span id="rlResult"></span> <small>PSI</small>
             </div>
           </div>
 
           <div class="tyre-card">
-            <div class="tyre-pos">RR // REAR RIGHT *</div>
+            <div class="tyre-pos zone-in">RR // REAR RIGHT *</div>
             <input
-              class="field tyre-input"
+              class="field tyre-input zone-in"
               id="rr"
               type="number"
               step="0.1"
               value=""
             />
-            <div class="tyre-value">
+            <div class="tyre-value zone-out">
               <span id="rrResult"></span> <small>PSI</small>
             </div>
           </div>
@@ -817,6 +842,7 @@
       }
 
       document.addEventListener("input", () => {
+        setLcd("input");
         saveInputs();
         checkResetState();
       });
@@ -857,6 +883,26 @@
           btn.classList.add("active");
           document.getElementById(btn.dataset.panel).classList.add("active");
         });
+      });
+
+      // ----------------------------------------------------
+      // LCD LIT / UNLIT STATE
+      // ----------------------------------------------------
+      const screenEl = document.querySelector(".screen");
+
+      // "awake": everything lit, "input": form lit, "result": output lit
+      function setLcd(state) {
+        screenEl.dataset.lcd = state;
+      }
+
+      const INPUT_SELECTOR = "input, select, textarea, .check";
+
+      document.addEventListener("pointerdown", (e) => {
+        setLcd(e.target.closest(INPUT_SELECTOR) ? "input" : "awake");
+      });
+
+      document.addEventListener("focusin", (e) => {
+        if (e.target.matches("input, select")) setLcd("input");
       });
 
       // ----------------------------------------------------
@@ -1023,6 +1069,7 @@
           fuelMeta.textContent = "MISSING OR INVALID DATA // CHECK INPUTS";
           fuelMeta.classList.add("error");
           document.getElementById("stints").innerHTML = "";
+          setLcd("awake");
           return;
         }
 
@@ -1130,6 +1177,7 @@
 
         document.getElementById("btnCopyFuel").disabled = false;
         document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
+        setLcd("result");
       }
 
       function calculatePressure() {
@@ -1147,6 +1195,7 @@
           ["fl", "fr", "rl", "rr"].forEach((id) => {
             document.getElementById(id + "Result").textContent = "ERR";
           });
+          setLcd("awake");
           return;
         }
 
@@ -1183,6 +1232,7 @@
         document.getElementById("btnCopyPressure").disabled = false;
         document.getElementById("btnCopyPressure").textContent =
           "COPY PRESSURES";
+        setLcd("result");
       }
 
       // ----------------------------------------------------
@@ -1202,6 +1252,7 @@
 
         document.getElementById("btnCopyFuel").disabled = true;
         document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
+        setLcd("awake");
         saveInputs();
         checkResetState();
       }
@@ -1227,6 +1278,7 @@
         document.getElementById("btnCopyPressure").disabled = true;
         document.getElementById("btnCopyPressure").textContent =
           "COPY PRESSURES";
+        setLcd("awake");
         saveInputs();
         checkResetState();
       }
