@@ -2,6 +2,19 @@
 
 RaceNG is a strategic sim racing assistant designed for Assetto Corsa Competizione. It helps you calculate optimal fuel loads with multi-mode support (Basic, Normal, and Pro) and adjust your tyre setup pressures based on ambient temperature and brake duct changes to consistently hit your target operating pressures.
 
+## Pronunciation & Name Origin
+"RaceNG" is pronounced like **"Race Eng"**, a pun on **"Race Engineer"** — the person on the pit wall who crunches the numbers so you can focus on driving.
+
+## Architecture
+The whole app lives in a single `index.html` file (HTML, CSS and JavaScript together) on purpose. It makes RaceNG extremely portable: there is nothing to install or build and no web server to run, so it works instantly and offline by simply opening the file.
+
+## Offline Usage
+1. Open the RaceNG web page in your browser.
+2. Press `Ctrl+S` (or `Cmd+S` on Mac) to "Save As...", and save the HTML file directly to your desktop.
+3. Double-click the saved file whenever you need it, no internet connection required.
+
+Once downloaded, you can safely rename the file to whatever you want without breaking its functionality.
+
 ## Features
 
 ### Fuel Calculator
