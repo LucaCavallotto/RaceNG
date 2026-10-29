@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, interactive-widget=resizes-visual"
+    />
     <title>RaceNG</title>
     <link
       rel="icon"
@@ -12,16 +15,25 @@
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap");
 
+      /* DSEG (c) Keshikan, SIL Open Font License 1.1, embedded so the LCD
+         digits work offline (numbers only; labels use VT323) */
+      @font-face {
+        font-family: "DSEG7";
+        src: url(data:font/woff2;base64,d09GMgABAAAAABREAA4AAAAAWugAABPpAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP0ZGVE0cGhwGYACCcggEEQgKumCmLAuBEgABNgIkA4E2BCAF8AcHgTIbKk+joqSzqWAkQtg4ACLaycV/TNAkroVr80AlJkpPmR5EiaJzKWtiLkKldZvoaeZF/flrCw7h2R0Llj8uHOYYDY28mD78uv/Oxcw8UvEnLpTIthFsYCjrUNeNCuX/vJBBdjm39+9AqkRuLnElVgLaFGVKSDVYPw8fY+79P7Ek2oZrmmTE8m6VkllKHJ2SyJCpNI6SgIzdfl8JBhQgRRxEXpBQl7AwC/2woaIkHXCPC2AqEdr9a1C48v4v3etHvU21w/3MjCCf77h62MgxEwIO4LxL9UaGxegMEicJ+1y3Fyn+1/J7xbNPlcIrASLZHodMXYZKBJkAs7en+9670v33j36IU+PnkEc5dPdMv7yrkHe/Q94yMo5MISHHjERNgGXmMjVKxQ1YyMzUm0wt2/1/6OLAMYoRRjF649CxstoNzTbn1+t17ftK0nYxizFCDGJwhRiMCTx9bWp6jRlms4TXW/tnJZC0v0QACABv3oMC4LnVo3kAPg6/eYAAAEDFhAMogAAIgBfczHklsjyZC5yOvQD5cRIUoIQCEEj4NQHA3HNQPrYwcjcfWI4OAbKB0ImBz1hEXd0hsEOJ+GlycwAdHQbwy2hYRjXYpMAnLaeP4sSvn8M1V5xwwD4TwuWYlDEWNmwHKt0uYEX03y+UId1inqdTxs0MbZPZYn0s9Se9PxAMhSPRWDyRBICU9GE2ly8US+VKtVZvNFvtTrfn5x8QGBSMy//hqcu7+vMogPzDwWD21OeFDAHpD/nYK3YDGZSjuxMiSiC8qazmJHkhGlMiUhDfG7ChgA44NDxw4rob/LKV64SSKM6VRPloCInJhY9COIEh+gctGomjLiAq13Ia/p8fOhBlxDlhHGVOyj1yqclBTkJRH+Dqv0jMFaM/o0pBzecbfMX+MaNCZwb198vk6Gr3+vh008zERs/aWEqs0hxH0jsSlowj6Xvy8Vi5gr6UxuJZukMUlni2flsukSBfqSDdPQ0TsYG5ebigEbDsCXkPzXsFDkiQ5elompYNT0MmfEVqZTqr/MLn96unMt+vOXE17FEfW36jyi5MN+2VuRLaW5Rm6ULVXfT+xdnkImV3mm7XdU8FVTf+N8FiClYCuGKJdmykRynJ2Al74urzCt2fQHoWySvJ5P+672R53Ma5T36CraDZyY3JXJ5aS6P/RFYzVqY3ND+o8bR4/ho9Sd36+k8h/sHkSmtCRqteNhH7zrAcH/O6jp+92hccda9/PHhlj3+cfjyMPq4FOJe4r21IdYOAfW/G1iu3wfsdSjYMO3w8YfKBJpMI29UKz1Ku8mnq4NKUHsrXSDjBiHQ6Y1HGVuZrrW42MlAzpmySkx152w57CRHhtZOjLQYtq5218zbGnjY1cupK12SLF/aZ8YySHKU7ueNBjog6h4MMipRxdvoMv5XEzKmUCi3ho7BSb4NknO6e8c1oInWtZ7nG6slXd5kpM/wxg1Kf2TO/9MXNwnmG/sNcSXdJN6HJ6wlDE0Xm5Ad6skl34LXH/sl09qSa3vd2Mrp8unuh7Pi+sGDV/p6gfk44jfVo7Fqu8UdpjjbyR6KM8rkJAAc/ctivUTz/NScznp96g/+FfvVaGQqBYS7ohi1kJEbd9NzJr8UYOxgDQO4AT4EdR978vPyfY8upZA9ip+N8Z/c9trHZjYO3Lcvkbf2g7lPnYQAzdiSYc4zRU/dYAwDAFhGbm55mSUmofSspyd+SycfWkjPHk1Kgiu+lyJSZUi6QJ0oVa34u1U2L8KDUcFzeeGEj1eU5CkhRDuCYSErC4UFJaayWzObgl1wirpQCW3wpRbHkpdwoA0qVTN4s1auR5K/UKF1ufbGNbJds/N+aQQSHtNDBFXpHrJ50IijgQnJ6aENTXOwHN44Iuhe5hRZ6jjNZunGj0zil+9UiVieiECfgrSF7+3eyvTwJBUsfX2ijldtocyS8j25xsUR3o1Od7rpfYGS7SJELPC9R4d68QGsDwbKkhpfkby/vn3ZHzyuRoxnYGN5nKKzuTdmJLqGZBSGy13oOd56EHoTu3UYWeDbdf4n0LKSzrvzw3VP4EC5U3CrP9HIP8wfxvC/EsCRNQbcij555K4h8/G30+Jxf/ig5SFeZZqEW6khcs/TDCfjNKtpI+uXVq4mhBTwPsMWnhRxf/jjJqRFcX9Sv19fJ6MDzML1cbRM5FUJ65vkNFvnZKUD397fnrWmTK0M66jlooRFA927decUgPqATJPL4AKtBWoKvIsa51nEFfF2UE8bKd8sdfREAagPzVuuFK1rHuRAMgjAdHHgVUayhdqa0phXJoPdSK6kMKkyICucznIIlq1NxhwjTSxsXStowXsnbmBuSgXbBVkGO4TcUBpaOv+aZIA1f+GBAkEkVhOvYZ//zOUvgmtpqHPxCE8eKWNIgmsXveKOwkYGr/76wMwtOePkOl7+8kKvr1Fp1YhUe1CjsKtTqc4cnJgfGTDCuNP+/3nrx+cJgp8TFPqxk+P1NCTrSoSseRGc+lQ1axDgO4AQMHX1Ty5HG3DLHD5xfD1qS2haBr3Ymsp6MA8wZ8uTawCAQVPSGVoW1ZvgfrP0HaWibZVba2WTqYM5h4r5qqtcH2wLSNRUmQNMKDWFZRxA0OTRzqhLapHdrHnSEMFTkLonYg2yyAztD8ZOlnbGKLjRAB+IbfEZ5pPUJmgDH2huoepfexVUj4Tr3VyGrj2umNYSuHAVxZ50uNI6iH2bmpzRV/cO3BDnZEOQDIxvyprIxdCakGCdAfNjcZoyta2Yt+fd6pF+suwk4cuqDuaUhHcyCxZh1wGMiO1WHSX8lu7NXvgul7nWsDaLG7Tqa1QEjGDF8mQV/xvA2jcENj1XVzxcE/DzkneOmLtpcYUR2KJZqwAI6AIxb7UkGEo9Nb0ZFHiVqMbnA1l2aYmuRwIbg6iJTuA1QJC+2iCV0us8DE+I+B4m37i4OZw16Nn0KzRjA3g5h9h6KYZmocnEaTsNdkXM1oQRJEi+mKZr2XzP5UzKQUqhrMqjZxJTGUtFPApqWBs7+VGQj6oBB94DD3VpjNiQ5KQgqS+8SB5/s+3NY1x0DZ8bvUAluI5VL1VKFXAX4kmU+DO26CyCx9FiLimTYkTsSG2g8x8tQShuwnYqvFmIsWAF84dCawWZSR8e/VKcZNFtXuAUnRu5L3s9BcpDPt6/NjAYZywWTcxxLGNvqilpKkKLZpC/J/cIQouJZH1qTNXnd6R9SuDpS5J1AsyaYtS1zQ+GwAyuugLtCpOQthyJRD5AWOMRUTzal+IcTPUtptKMFCZxP4YWguF30UYD593mVY6PskEHIwroqHY2BJ3PnQwbMhGoHHRo7c5uikib1glNDRMZ5rugKGxZB7Yk7btwcsFAxn/BBFQfZpRQGH5JsfEWUMk7CDD4EvsJ9fYHWLziTTKVo5ng1hqf9uOwoCzs+UmVWkSejE65rO0pkNZ7e0SGNnjpqYZA8Na8AEoK45mwyNKOjo2gWKtLJdC4sQoDnYnctfUhVqlqo0Z8zAsmipC50Z+iakWQDpnWWTBvF5wGYMjfHdBt0hIfCbEMY7rT3q7QDV8eeiDEQyzaRm+texrEAxbr7mCvWmbTXyKYoX4cSQ6Ov+p3CDNV1xUGoqfTSLeFeYTXr+UKAk4LXtjQnRUeLA+ElwkBCcvlbspYAuBNAOSJxmj+bhVpsksbk5Jsc6gXX5iTpzB9jNb0Ek4fGZOU1kOJ1LblqeHMUmHXz8jG7FwyeEKdssNfq8Ze5ZGyGvTZECATPiQEvPJ/h4km7BF91ablgRSaRY+sieX1lHrJ4OYu0TazHlIoAmRvWhMQaapTM2//HCV7R6/hooZrPtvs56//uoy7QjJ0IhE1YEVUJk0JGSMXROQKBuRPEvEGlQCv76vuID7Gih1fejIm3/iu4abzxsBi2odCb1Gs9ty+5CJYkrJkJGjx8hDk9LxN+kZFysa9UnwLhikGIIMCmTQSqHE0VDUFC1bMGpfiSYGQWzCzpNuUsFVqekMbriu9ECZBQZ1MB8eK5g0TiTUzOjJwQIlklWKcBJ6ArKM2QuM2+Dh6tbplTyCngSWp4atWdR2mTtvxSlM0cFXGwgRA/6Z3heKSrfEC1Zl7ZXCO0u43Gkec+aTcHzBsjb3eDTBXdCo2TSbuk//yR87QCUtdOKFvgOYDNWZx3mzeVIhuI3Bm6UCB6TnnKkri0QLG17mNr2CrUMmBkQcjoVbU0FWPJbDezdxUz7FXGxSx2LrDZ27C+pbm1uP261OEtL0m8EMhdaE6px7l4den3i53HTqLJ9m3OB46qPdPkzxOTujVZhKdboGX7eg7wJc+7ud98qrKWiaU+cCVQ2+K/kl1WxYtN+1OsvEH7G0c7pcKXVIJLIF+salKfPf25zBVb3RMheqS6FBs47xsqSjHSdy41qRkN9/eSLTxTLLAoQbfdyaSGlcmHuXW9l0iueoNWRse5Ykkf3GQ13XGtMJ2kBnyr6Bmw06xtIW1sJUWFFUMGIalysrYRwxgCH8jt2l4mg6rY33SnUOFkLKGsuSXNRmmRchowr0DLP0+ud75hN32zVWPmrIZDqrVVmqDA9PgdY9IKV0MSYFnEqCdzS8R94Z4AFq7KZBBhGfQV3d1kEgPNCneAxUsmhSPpiRc6knUiJg3rl1VdwYwdsRQ8QcwAUXOMIlZm0y13uLVU7n2vTpXKmdq7yMe9+6uMSZ5bASc2n/Ywj7oAbKHaACuoJ2xbHK3Wtx3e98gEOZJJaW1+Wc2N/qx3Aw6HQ+a5UPAnKzimukiGuL7b3hergl7MMpkXcN7thCAKgXlw4zDBLaNpleFs9MdEvE0ctL8J2gLBK508FFysiXIwYGs68Tul4R3k3Pd0wao25v92LAelVXITz/ndNILXmR+v0uwTl90k9G4L9B0wr7iLrnyWtPvYpL2d2rbzoBGqfUdMabXJEwjcxJ8o3BKmiBoZWFs5vDr+ncUmg8tLKVSw4viO51vRgrZyTzS4BkO8f34YoAuKYXrHfQ7YlTz+WGUc6p7QOgFyNJ2b18dFsckCLIOndBqtk+M8CEeY7iL4CX2HY73Lz36BsK3dBFJMm7CnYRR0ANvxCYiO0CkvXoJwj/HLe6zaDzotYsnfUSA46X0sel/nw/7hsAZC7sDXVK8MQFoG7y02GTov4jrpD484UVDQpJTATkQRv/saAkYwVWiBskNEMmGUY6H6z3vqnuCYSXz144W6ooNFdyESSTcFo9Fx1Q7RuR6NB2rb2ejLR+/dN9rgRdXgoKxnwr5TYw32b8yxCBxpgn5T8fFRHyCOGG40tgzcbQrqRLgDNXTBvgnPPGnwWRL6qynl4UELEYtQBASCcF6j7Xf6RAxIEeAgjDcd+IA26lthMh4bAYy9+f7gi9a8T8cQ6OJgG77kNDyKmB6A7TVwejAbpADZSDioBApM/2LO947iCvXDX5KSO65zhUteUsV2rnYA8EVZUkJ55QpeSHGOwgxa+6xAF0emyWm/DU7BGiYscOFXIoCrOEMDgmssLNThrlw8BXFiVvF8K8nGQzSmJ86OOc0gxwZySbsYaINTEHEoDLV892vz4lRMsBSHJkkNok6LF0JGXMbyZTaNYM792ixFZ8n1MM4Sl4KPB0UXnXEkmZ0dJRLKzuHZSTzjNlggAdpRcJRL0G8Kz54ggV3oTxyzx0QAk6U68+dfHzMDiOp+aSn19ZD8zYa9FO8VNkWdIuABnN1SHUGoDMbP2BYSpGwEJ3AlH05hE3V+1BmPVHEHuMbA8MdSPcZZzRWYR45+CgQ0fQKQDKZ+5H0Ad9x3R4G+Q2lTb+4jnZOLoApdw0AqfNtWG6zaRywzbWQ4/Lg0PwOA+927s5UOKQZkYr3GIvYMKAve/UXAmoO3AsHwXnix6InQH7LUo+0FJTB/+92cSpGG4BjwHZI8h/y3oSHRntN5OgkN7LEg1QhdycpvsJVzpgzAx2PCnopyx8Gejh+kGo65IyaMeKMt7Ugx91C0nyT5IDjKL95EAA+Y66Lp90QcdizWawCjQUBa4Ok0KRgHVzGB2h/HJ7aEmpRSMi0pu5mADWnkUKEGH8ylMxToqiXYGk46+s0Dj8MCU5GnNCcj4NYYGC9utEO6NSreyAsakxV5uH59Uq02lg4oNBPq7ULI/IMMR410RDQK7l2WIoLYLIOYU0WOPkllkIYQyUI6BWCI9SmHUiIXSNR9tXlaygzRIQbal1HDZVKr68xC2TO2pYwM+9j0QCxunSvhAOwSgYuCA+jua9Zq/8dkxd/tCGCHc1XoGR6RnVkW6RGJdgPYNdg/khkNUI2Rfy/UW/6sjNv1Hm6Rm2N+XEkP+2y7Ba3DrihjnVO/8cMY5994MDQY7Hdsh4ryRFKWZubT/lEeNMceGXCGx1Jeib3Q1Ho6oktpV4C55utHraKnA6j8OeI8wbzI03xTpvlbi/Q3IJCDFWH/Lt699K7F89ia8etd1xx6t9+CtGmOebGNg9x2slmHVICErSO0rvPhFccsbQ89CuVscCzuYXtffVWhIzXZUQEPmIyOxmLayVvgyW9rLsfYh9OE57Vqf1E+snhXxT/3yetgg5yM7VH2IH4wzve7ejiDtyj9J9RFWe/PC7Slzi6HHTkf/Pq7x/cVD6MG9ztFuloACgwFbOyEo/PT/K3CDo1Hfskar9RYEXMe5K1Lz8talU9eQUNR6a1Kv6XWLr58oVEsARQA4D+nLvfOPp7yRcLp6BmZmFlY2dg5OLm4hYRFRMXEJSSlpGVk5fLH6Bspq6iqqWtoamkbrGw6DBF6x3ARIkWJfqnyu4kTL0GiJMlSpEqTLkOmLC0AAA==) format("woff2");
+      }
+
       :root {
         --shell: #181a19;
         --shell-light: #242725;
-        --lcd: #5a95d6;
-        --ink: #0a1a33;
-        --ink-soft: rgba(10, 26, 51, 0.68);
-        --line: rgba(10, 26, 51, 0.58);
-        --ghost: rgba(10, 26, 51, 0.1);
-        --placeholder: rgba(10, 26, 51, 0.38);
+        --lcd: #3fb5e3;
+        --ink: #05141c;
+        --ink-soft: rgba(5, 20, 28, 0.68);
+        --line: rgba(5, 20, 28, 0.58);
+        --ghost: rgba(5, 20, 28, 0.1);
+        --placeholder: rgba(5, 20, 28, 0.38);
         --font-lcd: "VT323", "Share Tech Mono", monospace;
+        --font-num: "DSEG7", "Share Tech Mono", monospace;
+        --font-label: "VT323", "Share Tech Mono", monospace;
         --danger: #7a2828;
       }
 
@@ -29,10 +41,17 @@
         box-sizing: border-box;
       }
 
+      html {
+        /* Everything is sized in rem; fitToScreen() picks the largest size
+           (up to 20px) at which the whole UI fits the window without scrolling */
+        font-size: 14px;
+      }
+
       html,
       body {
         margin: 0;
-        min-height: 100%;
+        height: 100%;
+        overflow: hidden;
       }
 
       body {
@@ -46,11 +65,20 @@
 
       .screen {
         position: relative;
-        overflow: hidden;
-        min-height: 100vh;
-        padding: clamp(18px, 3vw, 34px);
+        width: 100%;
+        max-width: 62rem;
+        margin: 0 auto;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 2rem;
         color: var(--ink);
         background: var(--lcd);
+      }
+
+      .screen > * {
+        flex-shrink: 0;
       }
 
       /* Header */
@@ -61,28 +89,28 @@
         align-items: flex-end;
         justify-content: space-between;
         border-bottom: 3px solid var(--ink);
-        padding-bottom: 13px;
-        margin-bottom: 18px;
+        padding-bottom: 0.8125rem;
+        margin-bottom: 1.125rem;
       }
 
       .brand {
         font-family: var(--font-lcd);
-        font-size: 38px;
+        font-size: 2.4rem;
         line-height: 0.8;
-        letter-spacing: 2px;
+        letter-spacing: 0.125rem;
       }
 
       .brand small {
         display: block;
         font-family: "Share Tech Mono", monospace;
-        font-size: 11px;
-        letter-spacing: 3px;
-        margin-top: 9px;
+        font-size: 0.6875rem;
+        letter-spacing: 0.1875rem;
+        margin-top: 0.5625rem;
       }
 
       .status {
-        font-size: 12px;
-        letter-spacing: 2px;
+        font-size: 0.75rem;
+        letter-spacing: 0.125rem;
         text-align: right;
       }
 
@@ -93,20 +121,20 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         border: 2px solid var(--ink);
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
 
       .nav button {
         appearance: none;
         border: 0;
         border-right: 2px solid var(--ink);
-        padding: 11px;
+        padding: 0.6875rem;
         background: transparent;
         color: var(--ink);
         font: inherit;
         font-family: var(--font-lcd);
-        font-size: 20px;
-        letter-spacing: 2px;
+        font-size: 1.25rem;
+        letter-spacing: 0.125rem;
         cursor: pointer;
       }
 
@@ -131,15 +159,22 @@
           text-shadow 0.35s ease;
       }
 
-      [data-lcd="input"] .zone-out,
-      [data-lcd="result"] .zone-in {
-        --ink: rgba(10, 26, 51, 0.2);
-        --ink-soft: rgba(10, 26, 51, 0.14);
-        --line: rgba(10, 26, 51, 0.12);
-        --ghost: rgba(10, 26, 51, 0.05);
-        --placeholder: rgba(10, 26, 51, 0.12);
+      .zone-in,
+      .zone-out {
+        color: var(--ink);
       }
 
+      .panel:not([data-result]) .zone-out,
+      [data-lcd="input"] .zone-out,
+      [data-lcd="result"] .zone-in {
+        --ink: rgba(5, 20, 28, 0.2);
+        --ink-soft: rgba(5, 20, 28, 0.14);
+        --line: rgba(5, 20, 28, 0.12);
+        --ghost: rgba(5, 20, 28, 0.05);
+        --placeholder: rgba(5, 20, 28, 0.12);
+      }
+
+      .panel:not([data-result]) .zone-out .value,
       [data-lcd="input"] .zone-out .value {
         text-shadow: none;
       }
@@ -152,7 +187,15 @@
       }
 
       .panel.active {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 auto;
+      }
+
+      /* Same spot on both tabs: buttons sit at the bottom of the panel */
+      .panel > .actions {
+        margin-top: auto;
+        padding-top: 1.0625rem;
       }
 
       .section-title {
@@ -160,21 +203,21 @@
         align-items: baseline;
         justify-content: space-between;
         border-bottom: 2px solid var(--ink);
-        padding-bottom: 7px;
-        margin-bottom: 15px;
+        padding-bottom: 0.4375rem;
+        margin-bottom: 0.9375rem;
       }
 
       .section-title h2 {
         margin: 0;
         font-family: var(--font-lcd);
-        font-size: 27px;
+        font-size: 1.6rem;
         font-weight: normal;
-        letter-spacing: 2px;
+        letter-spacing: 0.125rem;
       }
 
       .section-title span {
-        font-size: 11px;
-        letter-spacing: 1px;
+        font-size: 0.6875rem;
+        letter-spacing: 0.0625rem;
       }
 
       /* Mode selector */
@@ -182,7 +225,7 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         border: 2px solid var(--ink);
-        margin-bottom: 17px;
+        margin-bottom: 1.0625rem;
       }
 
       .mode-tabs button {
@@ -190,11 +233,11 @@
         border-right: 2px solid var(--ink);
         background: transparent;
         color: var(--ink);
-        padding: 5px;
+        padding: 0.3125rem;
         font: inherit;
         font-family: var(--font-lcd);
-        font-size: 19px;
-        letter-spacing: 2px;
+        font-size: 1.15rem;
+        letter-spacing: 0.125rem;
         cursor: pointer;
       }
 
@@ -211,20 +254,20 @@
       .form-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px 20px;
+        gap: 0.625rem 1.25rem;
       }
 
       .field {
         border-bottom: 2px solid var(--line);
-        padding: 7px 0 8px;
+        padding: 0.4375rem 0 0.5rem;
       }
 
       .field label {
         display: block;
-        font-family: var(--font-lcd);
-        font-size: 15px;
-        letter-spacing: 1.4px;
-        margin-bottom: 4px;
+        font-family: var(--font-label);
+        font-size: 1.05rem;
+        letter-spacing: 0.0875rem;
+        margin-bottom: 0.25rem;
       }
 
       .field input,
@@ -235,7 +278,7 @@
         background: transparent;
         color: var(--ink);
         font:
-          32px var(--font-lcd);
+          1.4rem var(--font-num);
         padding: 0;
       }
 
@@ -248,29 +291,66 @@
         color: var(--placeholder);
       }
 
+      /* Toggle segments, styled like the mode tabs */
       .checks {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 18px;
-        padding: 15px 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        border: 2px solid var(--ink);
+        margin: 0.9375rem 0;
       }
 
       .check {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 7px;
-        font-size: 12px;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.3125rem;
+        border-right: 2px solid var(--ink);
+        font-family: var(--font-lcd);
+        font-size: 1.15rem;
+        letter-spacing: 0.125rem;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .check:last-child {
+        border-right: 0;
       }
 
       .check input {
-        accent-color: var(--ink);
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Small LCD indicator segment that lights up when enabled */
+      .check::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border: 2px solid currentColor;
+      }
+
+      .check:has(input:checked) {
+        background: var(--ink);
+        color: var(--lcd);
+      }
+
+      .check:has(input:checked)::before {
+        background: currentColor;
+      }
+
+      .check:has(input:focus-visible) {
+        outline: 2px dashed var(--ink);
+        outline-offset: -5px;
       }
 
       /* Buttons */
       .actions {
         display: flex;
-        gap: 10px;
-        margin: 17px 0;
+        gap: 0.625rem;
+        margin: 1.0625rem 0;
       }
 
       .action {
@@ -279,9 +359,9 @@
         color: var(--lcd);
         font: inherit;
         font-family: var(--font-lcd);
-        font-size: 19px;
-        padding: 11px 18px;
-        letter-spacing: 1.5px;
+        font-size: 1.15rem;
+        padding: 0.6875rem 1.125rem;
+        letter-spacing: 0.0938rem;
         cursor: pointer;
       }
 
@@ -309,62 +389,56 @@
 
       /* Results */
       .result-shell {
-        margin-top: 18px;
+        margin-top: 1.125rem;
         border: 3px solid var(--ink);
-        padding: 15px;
+        padding: 0.9375rem;
       }
 
       .result-header {
         display: flex;
         justify-content: space-between;
-        font-family: var(--font-lcd);
-        font-size: 15px;
-        letter-spacing: 2px;
+        font-family: var(--font-label);
+        font-size: 1.05rem;
+        letter-spacing: 0.125rem;
         border-bottom: 2px solid var(--line);
-        padding-bottom: 8px;
+        padding-bottom: 0.5rem;
       }
 
       .big-result {
         position: relative;
-        padding: 17px 0 12px;
+        padding: 1.0625rem 0 0.75rem;
         overflow: hidden;
-      }
-
-      .big-result .ghost {
-        position: absolute;
-        inset: 2px 0 auto;
-        color: var(--ghost);
-        font-family: var(--font-lcd);
-        font-size: clamp(70px, 13vw, 130px);
-        line-height: 1;
-        pointer-events: none;
       }
 
       .big-result .value {
         position: relative;
-        font-family: var(--font-lcd);
-        font-size: clamp(70px, 13vw, 130px);
+        min-height: 1em;
+        font-family: var(--font-num);
+        font-size: 3.4rem;
         line-height: 1;
-        letter-spacing: 2px;
-        text-shadow: 0 0 1px rgba(10, 26, 51, 0.4);
+        letter-spacing: 0.125rem;
+        text-shadow: 0 0 1px rgba(5, 20, 28, 0.4);
       }
 
       .big-result .unit {
         font-family: var(--font-lcd);
-        font-size: 19px;
-        letter-spacing: 2px;
+        font-size: 1.3rem;
+        letter-spacing: 0.125rem;
       }
 
       .stints {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
         border-top: 2px solid var(--ink);
-        margin-top: 8px;
+        margin-top: 0.5rem;
+        height: 5.5rem;
+        align-content: start;
+        overflow-y: auto;
       }
 
       .stint {
         border-right: 2px solid var(--ink);
-        padding: 5px;
+        padding: 0.3125rem;
       }
 
       .stint:last-child {
@@ -372,49 +446,49 @@
       }
 
       .stint-name {
-        font-family: var(--font-lcd);
-        font-size: 15px;
-        letter-spacing: 2px;
+        font-family: var(--font-label);
+        font-size: 1.05rem;
+        letter-spacing: 0.125rem;
       }
 
       .stint-value {
-        margin-top: 8px;
-        font-family: var(--font-lcd);
-        font-size: 34px;
+        font-family: var(--font-num);
+        margin-top: 0.5rem;
+        font-size: 1.3rem;
       }
 
       .stint-meta {
-        margin-top: 3px;
-        font-size: 11px;
+        margin-top: 0.1875rem;
+        font-size: 0.6875rem;
       }
 
       /* Tyres */
       .tyre-layout {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 0.625rem;
       }
 
       .tyre-card {
         position: relative;
         border: 2px solid var(--ink);
-        min-height: 150px;
-        padding: 14px;
+        min-height: 9.375rem;
+        padding: 0.875rem;
       }
 
       .tyre-card .tyre-input.field {
         display: block;
         width: 100%;
         height: auto;
-        margin: 12px 0 0;
-        padding: 3px 0 6px;
+        margin: 0.75rem 0 0;
+        padding: 0.1875rem 0 0.375rem;
         border: 0;
         border-bottom: 2px solid var(--line);
         border-radius: 0;
         background: transparent;
         color: var(--ink);
         font:
-          28px var(--font-lcd);
+          1.3rem var(--font-num);
         outline: none;
       }
 
@@ -426,36 +500,37 @@
       .tyre-card::before {
         content: "";
         position: absolute;
-        right: 12px;
-        bottom: 5px;
+        right: 0.75rem;
+        bottom: 0.3125rem;
         color: var(--ghost);
-        font-size: 56px;
+        font-size: 3.5rem;
       }
 
       .tyre-pos {
-        font-family: var(--font-lcd);
-        font-size: 17px;
-        letter-spacing: 2px;
+        font-family: var(--font-label);
+        font-size: 1.15rem;
+        letter-spacing: 0.125rem;
         border-bottom: 1px solid var(--line);
-        padding-bottom: 6px;
+        padding-bottom: 0.375rem;
       }
 
       .tyre-value {
-        margin-top: 19px;
-        font-family: var(--font-lcd);
-        font-size: 64px;
+        font-family: var(--font-num);
+        margin-top: 1.1875rem;
+        font-size: 2.6rem;
         line-height: 1;
       }
 
       .tyre-value small {
-        font-size: 17px;
-        letter-spacing: 1px;
+        font-family: var(--font-label);
+        font-size: 1.15rem;
+        letter-spacing: 0.0625rem;
       }
 
       .pressure-grid {
-        margin-top: 18px;
+        margin-top: 1.125rem;
         border-top: 2px solid var(--ink);
-        padding-top: 14px;
+        padding-top: 0.875rem;
       }
 
       /* Error */
@@ -465,62 +540,50 @@
       }
 
       .notice {
-        margin-top: 12px;
-        font-size: 11px;
-        letter-spacing: 0.8px;
+        min-height: 1.1em;
+        margin-top: 0.75rem;
+        font-size: 0.6875rem;
+        letter-spacing: 0.05rem;
       }
 
       /* Footer */
       .footer {
         display: flex;
         justify-content: space-between;
-        margin-top: 18px;
-        padding-top: 9px;
+        gap: 0.75rem;
+        margin-top: auto;
+        padding-top: 0.5625rem;
         border-top: 2px solid var(--ink);
-        font-size: 10px;
-        letter-spacing: 1px;
+        font-size: 0.75rem;
+        letter-spacing: 0.0625rem;
       }
 
-      /* Mobile */
-      @media (max-width: 700px) {
-        body {
-          padding: 0;
-        }
+      .footer-note {
+        flex: 1;
+        text-align: center;
+      }
 
-        .screen {
-          padding: 15px;
-          min-height: 100vh;
-        }
-
-        .header {
-          align-items: flex-start;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .status {
-          text-align: left;
-        }
-
-        .form-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .tyre-layout {
-          grid-template-columns: 1fr;
-        }
-
-        .actions {
-          flex-direction: column;
-        }
-
-        .action {
-          width: 100%;
-        }
-
+      /* Touch / narrow screens: no keyboard hints, keep version + note on one line */
+      @media (max-width: 700px), (pointer: coarse) {
         .footer {
-          flex-direction: column;
-          gap: 5px;
+          justify-content: center;
+          gap: 0.5rem;
+          font-size: 0.6875rem;
+        }
+
+        .footer-keys {
+          display: none;
+        }
+
+        .footer-note {
+          flex: 0 1 auto;
+        }
+      }
+
+      /* Mobile: same layout, tighter padding (everything scales to fit) */
+      @media (max-width: 700px) {
+        .screen {
+          padding: 0.75rem 1rem;
         }
       }
     </style>
@@ -531,7 +594,6 @@
       <header class="header">
         <div>
           <div class="brand">RaceNG</div>
-          <small>All calculations are best-effort estimates.</small>
         </div>
         <div class="status" id="status" aria-live="polite">AWAITING INPUT</div>
       </header>
@@ -615,6 +677,10 @@
               <input id="proFuel" type="number" min="0" step="0.1" value="" />
             </div>
             <div class="field">
+              <label>SAFETY MARGIN // %</label>
+              <input id="proMargin" type="number" min="0" value="" />
+            </div>
+            <div class="field">
               <label>TANK CAPACITY // L</label>
               <input id="tank" type="number" min="0" step="0.1" value="" />
             </div>
@@ -634,6 +700,22 @@
               COOL-DOWN LAP
             </label>
           </div>
+        </div>
+
+        <div id="fuelOutput" class="result-shell zone-out">
+          <div class="result-header">
+            <span>CALCULATED OUTPUT</span>
+            <span id="fuelModeLabel">NORMAL</span>
+          </div>
+
+          <div class="big-result">
+            <div class="value" id="fuelResult"></div>
+            <span class="unit">LITERS TOTAL FUEL</span>
+          </div>
+
+          <div id="fuelMeta" class="notice"></div>
+
+          <div id="stints" class="stints"></div>
         </div>
 
         <div class="actions">
@@ -656,23 +738,6 @@
           >
             COPY STRATEGY
           </button>
-        </div>
-
-        <div id="fuelOutput" class="result-shell zone-out">
-          <div class="result-header">
-            <span>CALCULATED OUTPUT</span>
-            <span id="fuelModeLabel">NORMAL</span>
-          </div>
-
-          <div class="big-result">
-            <div class="ghost"></div>
-            <div class="value" id="fuelResult"></div>
-            <span class="unit">LITERS TOTAL FUEL</span>
-          </div>
-
-          <div id="fuelMeta" class="notice"></div>
-
-          <div id="stints" class="stints"></div>
         </div>
       </section>
 
@@ -793,7 +858,8 @@
 
       <footer class="footer">
         <span>v 3.0</span>
-        <span>KEYS: ENTER CALCULATE // R RESET // C COPY</span>
+        <span class="footer-note">All calculations are best-effort estimates.</span>
+        <span class="footer-keys">ENTER CALC // R RESET // C COPY</span>
       </footer>
     </main>
 
@@ -894,6 +960,7 @@
       // LCD LIT / UNLIT STATE
       // ----------------------------------------------------
       const screenEl = document.querySelector(".screen");
+      const footerEl = document.querySelector(".footer");
 
       const STATUS_TEXT = {
         awake: "AWAITING INPUT",
@@ -919,16 +986,80 @@
         if (e.target.matches("input, select")) setLcd("input");
       });
 
-      // Bring the results into view, mainly so phones don't leave them off-screen
-      function scrollToResults(id) {
-        const isMobile = window.matchMedia("(max-width: 700px)").matches;
-        // Dismiss the on-screen keyboard so it doesn't cover the results
-        if (isMobile) document.activeElement?.blur();
-        document.getElementById(id).scrollIntoView({
-          behavior: "smooth",
-          block: isMobile ? "start" : "nearest",
-        });
+      // The page never scrolls, so results are always on screen; on phones just
+      // dismiss the on-screen keyboard once a calculation is done
+      function dismissKeyboard() {
+        if (window.matchMedia("(max-width: 700px)").matches)
+          document.activeElement?.blur();
       }
+
+      // ----------------------------------------------------
+      // FIT TO SCREEN
+      // ----------------------------------------------------
+      const MAX_FONT_PX = 20;
+      const MIN_FONT_PX = 5;
+
+      // Overflow of the screen in its worst case: the tallest/widest of every
+      // panel and fuel mode, whichever is showing right now. That keeps the
+      // scale constant: switching modes or showing a result never rescales.
+      function overflowRatio() {
+        const panels = [...document.querySelectorAll(".panel")];
+        const fields = ["basicFields", "normalFields", "proFields"].map((id) =>
+          document.getElementById(id),
+        );
+        const shown = ["grid", "grid", "block"];
+        const savedPanels = panels.map((p) => p.classList.contains("active"));
+        const savedDisplay = fields.map((f) => f.style.display);
+
+        const layouts = [
+          { panel: 0, mode: 0 },
+          { panel: 0, mode: 1 },
+          { panel: 0, mode: 2 },
+          { panel: 1, mode: -1 },
+        ];
+        let ratio = 1;
+        layouts.forEach(({ panel, mode }) => {
+          panels.forEach((p, i) => p.classList.toggle("active", i === panel));
+          fields.forEach((f, i) => {
+            f.style.display = i === mode ? shown[i] : "none";
+          });
+          // scrollHeight ignores the bottom padding of overflowing content,
+          // so measure down to the footer plus that padding explicitly
+          const box = screenEl.getBoundingClientRect();
+          const footerBottom = footerEl.getBoundingClientRect().bottom;
+          const needed = Math.max(
+            screenEl.scrollHeight,
+            footerBottom - box.top + parseFloat(getComputedStyle(screenEl).paddingBottom),
+          );
+          ratio = Math.min(
+            ratio,
+            screenEl.clientHeight / needed,
+            screenEl.clientWidth / screenEl.scrollWidth,
+          );
+        });
+
+        panels.forEach((p, i) => p.classList.toggle("active", savedPanels[i]));
+        fields.forEach((f, i) => (f.style.display = savedDisplay[i]));
+        return ratio;
+      }
+
+      // Everything is sized in rem: pick the largest root size (up to the cap)
+      // at which the worst-case layout fits the window, so nothing scrolls.
+      // Only runs on load and window changes, never when results appear.
+      function fitToScreen() {
+        const root = document.documentElement;
+        let size = MAX_FONT_PX;
+        for (let i = 0; i < 8; i++) {
+          root.style.fontSize = size + "px";
+          const ratio = overflowRatio();
+          if (ratio >= 0.999) break;
+          size = Math.max(MIN_FONT_PX, size * ratio * 0.98);
+        }
+      }
+
+      window.addEventListener("resize", fitToScreen);
+      window.addEventListener("orientationchange", fitToScreen);
+      document.fonts?.ready.then(fitToScreen);
 
       // ----------------------------------------------------
       // HELPERS
@@ -1085,6 +1216,8 @@
               if (document.getElementById("formation").checked) laps++;
               if (document.getElementById("cooldown").checked) laps++;
               fuel = parseFloat(fStr);
+              const m = n("proMargin");
+              margin = isNaN(m) ? 0 : m;
             }
           }
         }
@@ -1095,6 +1228,7 @@
           fuelMeta.classList.add("error");
           document.getElementById("stints").innerHTML = "";
           document.getElementById("btnCopyFuel").disabled = true;
+          document.getElementById("fuel").removeAttribute("data-result");
           setLcd("error");
           return;
         }
@@ -1125,51 +1259,43 @@
         let lapCounter = 0;
 
         if (currentMode === "pro") {
-          if (tankL > 0) {
-            const maxLapsPerStint = Math.floor(tankL / (fuel * safetyFactor));
-            const safeMaxLaps = Math.max(1, maxLapsPerStint);
+          const lapFuel = fuel * safetyFactor;
+          const safeMaxLaps =
+            tankL > 0 ? Math.max(1, Math.floor(tankL / lapFuel)) : Infinity;
+
+          if (tankL > 0 && mandStops === 0) {
+            // Greedy: fill the tank for every stint, remainder in the last one
             let remainingLaps = laps;
             let stintIndex = 0;
             while (remainingLaps > 0) {
-              if (remainingLaps * fuel * safetyFactor <= tankL) {
-                const stintLaps = remainingLaps;
-                const stintFuel = stintLaps * fuel * safetyFactor;
-                stints.push({
-                  index: stintIndex,
-                  laps: stintLaps,
-                  fuel: stintFuel,
-                  startLap: lapCounter + 1,
-                  endLap: lapCounter + stintLaps,
-                });
-                lapCounter += stintLaps;
-                remainingLaps = 0;
-              } else {
-                const stintLaps = safeMaxLaps;
-                const stintFuel = tankL; // Fill to max tank capacity
-                stints.push({
-                  index: stintIndex,
-                  laps: stintLaps,
-                  fuel: stintFuel,
-                  startLap: lapCounter + 1,
-                  endLap: lapCounter + stintLaps,
-                });
-                lapCounter += stintLaps;
-                remainingLaps -= stintLaps;
-              }
+              const isLast = remainingLaps * lapFuel <= tankL;
+              const stintLaps = isLast ? remainingLaps : safeMaxLaps;
+              stints.push({
+                index: stintIndex,
+                laps: stintLaps,
+                fuel: isLast ? stintLaps * lapFuel : tankL,
+                startLap: lapCounter + 1,
+                endLap: lapCounter + stintLaps,
+              });
+              lapCounter += stintLaps;
+              remainingLaps -= stintLaps;
               stintIndex++;
             }
           } else {
-            // No tank limit, just use mandatory stops
-            const numStints = mandStops + 1;
+            // Equal split: at least the mandatory stops, more if the tank
+            // can't cover a stint of that length
+            const numStints = Math.max(
+              mandStops + 1,
+              tankL > 0 ? Math.ceil(laps / safeMaxLaps) : 1,
+            );
             const baseLaps = Math.floor(laps / numStints);
             const remainder = laps % numStints;
             for (let i = 0; i < numStints; i++) {
               const stintLaps = baseLaps + (i < remainder ? 1 : 0);
-              const stintFuel = stintLaps * fuel * safetyFactor;
               stints.push({
                 index: i,
                 laps: stintLaps,
-                fuel: stintFuel,
+                fuel: stintLaps * lapFuel,
                 startLap: lapCounter + 1,
                 endLap: lapCounter + stintLaps,
               });
@@ -1203,8 +1329,9 @@
 
         document.getElementById("btnCopyFuel").disabled = false;
         document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
+        document.getElementById("fuel").dataset.result = "";
         setLcd("result");
-        scrollToResults("fuelOutput");
+        dismissKeyboard();
       }
 
       function calculatePressure() {
@@ -1223,6 +1350,7 @@
             document.getElementById(id + "Result").textContent = "ERR";
           });
           document.getElementById("btnCopyPressure").disabled = true;
+          document.getElementById("pressures").removeAttribute("data-result");
           setLcd("error");
           return;
         }
@@ -1260,8 +1388,9 @@
         document.getElementById("btnCopyPressure").disabled = false;
         document.getElementById("btnCopyPressure").textContent =
           "COPY PRESSURES";
+        document.getElementById("pressures").dataset.result = "";
         setLcd("result");
-        scrollToResults("pressureGrid");
+        dismissKeyboard();
       }
 
       // ----------------------------------------------------
@@ -1281,6 +1410,7 @@
 
         document.getElementById("btnCopyFuel").disabled = true;
         document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
+        document.getElementById("fuel").removeAttribute("data-result");
         setLcd("awake");
         saveInputs();
         checkResetState();
@@ -1307,6 +1437,7 @@
         document.getElementById("btnCopyPressure").disabled = true;
         document.getElementById("btnCopyPressure").textContent =
           "COPY PRESSURES";
+        document.getElementById("pressures").removeAttribute("data-result");
         setLcd("awake");
         saveInputs();
         checkResetState();
@@ -1362,6 +1493,8 @@ Date: ${dateStr}
           text += `- Lap Pace: ${document.getElementById("proLapMin").value || 0}m ${document.getElementById("proLapSec").value || 0}s
 `;
           text += `- Fuel per Lap: ${parseFloat(document.getElementById("proFuel").value).toFixed(2)} L
+`;
+          text += `- Safety Margin: ${document.getElementById("proMargin").value || 0}%
 `;
           if (n("tank") > 0)
             text += `- Tank Capacity: ${n("tank")} L
@@ -1529,7 +1662,10 @@ OUTPUTS:
         }
       });
 
-      window.addEventListener("load", loadInputs);
+      window.addEventListener("load", () => {
+        loadInputs();
+        fitToScreen();
+      });
     </script>
   </body>
 </html>
