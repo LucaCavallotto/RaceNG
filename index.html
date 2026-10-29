@@ -655,7 +655,7 @@
           </button>
         </div>
 
-        <div class="result-shell zone-out">
+        <div id="fuelOutput" class="result-shell zone-out">
           <div class="result-header">
             <span>CALCULATED OUTPUT</span>
             <span id="fuelModeLabel">NORMAL</span>
@@ -707,7 +707,7 @@
           </div>
         </div>
 
-        <div class="tyre-layout pressure-grid">
+        <div id="pressureGrid" class="tyre-layout pressure-grid">
           <div class="tyre-card">
             <div class="tyre-pos zone-in">FL // FRONT LEFT *</div>
             <input
@@ -913,6 +913,17 @@
       document.addEventListener("focusin", (e) => {
         if (e.target.matches("input, select")) setLcd("input");
       });
+
+      // Bring the results into view, mainly so phones don't leave them off-screen
+      function scrollToResults(id) {
+        const isMobile = window.matchMedia("(max-width: 700px)").matches;
+        // Dismiss the on-screen keyboard so it doesn't cover the results
+        if (isMobile) document.activeElement?.blur();
+        document.getElementById(id).scrollIntoView({
+          behavior: "smooth",
+          block: isMobile ? "start" : "nearest",
+        });
+      }
 
       // ----------------------------------------------------
       // HELPERS
@@ -1187,6 +1198,7 @@
         document.getElementById("btnCopyFuel").disabled = false;
         document.getElementById("btnCopyFuel").textContent = "COPY STRATEGY";
         setLcd("result");
+        scrollToResults("fuelOutput");
       }
 
       function calculatePressure() {
@@ -1242,6 +1254,7 @@
         document.getElementById("btnCopyPressure").textContent =
           "COPY PRESSURES";
         setLcd("result");
+        scrollToResults("pressureGrid");
       }
 
       // ----------------------------------------------------
