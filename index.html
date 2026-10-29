@@ -301,7 +301,8 @@
       }
 
       .action:disabled {
-        opacity: 0.5;
+        opacity: 0.4;
+        border-style: dashed;
         cursor: not-allowed;
         pointer-events: none;
       }
@@ -650,6 +651,8 @@
             class="action secondary"
             id="btnCopyFuel"
             onclick="copyFuel()"
+            title="Calculate first to enable copying"
+            disabled
           >
             COPY STRATEGY
           </button>
@@ -780,6 +783,8 @@
             class="action secondary"
             id="btnCopyPressure"
             onclick="copyPressure()"
+            title="Calculate first to enable copying"
+            disabled
           >
             COPY PRESSURES
           </button>
@@ -1089,6 +1094,7 @@
           fuelMeta.textContent = "MISSING OR INVALID DATA // CHECK INPUTS";
           fuelMeta.classList.add("error");
           document.getElementById("stints").innerHTML = "";
+          document.getElementById("btnCopyFuel").disabled = true;
           setLcd("error");
           return;
         }
@@ -1216,6 +1222,7 @@
           ["fl", "fr", "rl", "rr"].forEach((id) => {
             document.getElementById(id + "Result").textContent = "ERR";
           });
+          document.getElementById("btnCopyPressure").disabled = true;
           setLcd("error");
           return;
         }
@@ -1306,6 +1313,7 @@
       }
 
       async function copyFuel() {
+        if (document.getElementById("btnCopyFuel").disabled) return;
         const fuelResult = document.getElementById("fuelResult").textContent;
         if (!fuelResult || fuelResult === "ERR") return;
 
@@ -1388,6 +1396,7 @@ OUTPUTS:
       }
 
       async function copyPressure() {
+        if (document.getElementById("btnCopyPressure").disabled) return;
         const flResult = document.getElementById("flResult").textContent;
         if (!flResult || flResult === "ERR") return;
 
