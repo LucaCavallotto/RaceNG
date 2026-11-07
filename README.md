@@ -1,6 +1,6 @@
 # RaceNG
 
-RaceNG is a strategic sim racing assistant designed for Assetto Corsa Competizione. It helps you calculate optimal fuel loads with multi-mode support (Basic, Normal, and Pro) and adjust your tyre setup pressures based on ambient temperature and brake duct changes to consistently hit your target operating pressures.
+RaceNG is a strategic sim racing assistant designed for Assetto Corsa Competizione. It helps you calculate optimal fuel loads with Normal and Pro modes and adjust your tyre setup pressures based on ambient temperature and brake duct changes to consistently hit your target operating pressures.
 
 The interface replicates the look and behaviour of a motorsport LCD dash display: a monochrome backlit screen with segment-style digits, lit and unlit zones that fade depending on what you are doing, a power-on splash screen, and a switchable backlight (day/night) toggled with the headlights button.
 
@@ -19,9 +19,8 @@ Once downloaded, you can safely rename the file to whatever you want without bre
 ## Features
 
 ### Fuel Calculator
-Three dedicated calculation modes to plan your race with optimal efficiency:
+Two dedicated calculation modes to plan your race with optimal efficiency:
 
-- **Basic Mode**: Simple lap-count multiply. Enter fixed total laps and fuel consumption per lap. Displays total fuel and total laps in the results callout.
 - **Normal Mode (Default)**: Time-based calculation. Input race duration, average lap pace, fuel consumption per lap, and safety margin. Dynamically computes and displays the total required fuel volume and total laps.
 - **Pro Mode (Advanced)**: Comprehensive strategy engine incorporating tank capacity, mandatory pitstops, safety margin, and specialized lap options (Formation lap, Cool-down lap). Highlights include:
   - **Greedy Maximum-Stint Strategy (`mandStops = 0`)**: Calculates strategy by filling the tank to 100% capacity (safe maximum integer laps) for all initial stints, leaving only the exact remaining fuel required to finish the race in the final stint.
