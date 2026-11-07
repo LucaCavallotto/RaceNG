@@ -438,14 +438,9 @@
     /* Small LCD indicator segment that lights up when enabled */
     .check::before {
       content: "";
-      width: 0.5rem;
-      height: 0.5rem;
+      width: 0.75rem;
+      height: 0.75rem;
       border: 2px solid currentColor;
-    }
-
-    .check:has(input:checked) {
-      background: var(--ink);
-      color: var(--lcd);
     }
 
     .check:has(input:checked)::before {
@@ -925,27 +920,27 @@
         <div id="normalFields" class="form-grid zone-in">
           <div class="field">
             <label>RACE TIME // HOURS *</label>
-            <input id="hours" type="number" min="0" value="" />
+            <input id="hours" type="number" min="0" placeholder="--" value="" />
           </div>
           <div class="field">
             <label>RACE TIME // MINUTES *</label>
-            <input id="minutes" type="number" min="0" max="59" value="" />
+            <input id="minutes" type="number" min="0" max="59" placeholder="--" value="" />
           </div>
           <div class="field">
             <label>AVERAGE LAP // MINUTES *</label>
-            <input id="lapMin" type="number" min="0" value="" />
+            <input id="lapMin" type="number" min="0" placeholder="--" value="" />
           </div>
           <div class="field">
             <label>AVERAGE LAP // SECONDS *</label>
-            <input id="lapSec" type="number" min="0" max="59" value="" />
+            <input id="lapSec" type="number" min="0" max="59" placeholder="--.-" value="" />
           </div>
           <div class="field">
             <label>FUEL PER LAP // L *</label>
-            <input id="normalFuel" type="number" min="0" step="0.1" value="" />
+            <input id="normalFuel" type="number" min="0" step="0.1" placeholder="-.--" value="" />
           </div>
           <div class="field">
             <label>SAFETY MARGIN // %</label>
-            <input id="margin" type="number" min="0" value="" />
+            <input id="margin" type="number" min="0" placeholder="5" value="" />
           </div>
         </div>
 
@@ -953,35 +948,35 @@
           <div class="form-grid">
             <div class="field">
               <label>RACE TIME // HOURS *</label>
-              <input id="proHours" type="number" min="0" value="" />
+              <input id="proHours" type="number" min="0" placeholder="--" value="" />
             </div>
             <div class="field">
               <label>RACE TIME // MINUTES *</label>
-              <input id="proMinutes" type="number" min="0" max="59" value="" />
+              <input id="proMinutes" type="number" min="0" max="59" placeholder="--" value="" />
             </div>
             <div class="field">
               <label>AVERAGE LAP // MINUTES *</label>
-              <input id="proLapMin" type="number" min="0" value="" />
+              <input id="proLapMin" type="number" min="0" placeholder="--" value="" />
             </div>
             <div class="field">
               <label>AVERAGE LAP // SECONDS *</label>
-              <input id="proLapSec" type="number" min="0" max="59" value="" />
+              <input id="proLapSec" type="number" min="0" max="59" placeholder="--.-" value="" />
             </div>
             <div class="field">
               <label>FUEL PER LAP // L *</label>
-              <input id="proFuel" type="number" min="0" step="0.1" value="" />
+              <input id="proFuel" type="number" min="0" step="0.1" placeholder="-.--" value="" />
             </div>
             <div class="field">
               <label>SAFETY MARGIN // %</label>
-              <input id="proMargin" type="number" min="0" value="" />
+              <input id="proMargin" type="number" min="0" placeholder="5" value="" />
             </div>
             <div class="field">
-              <label>TANK CAPACITY // L</label>
-              <input id="tank" type="number" min="0" step="0.1" value="" />
+              <label>TANK CAPACITY // L *</label>
+              <input id="tank" type="number" min="0" step="0.1" placeholder="--" value="" />
             </div>
             <div class="field">
-              <label>MANDATORY PITSTOPS</label>
-              <input id="stops" type="number" min="0" value="" />
+              <label>MANDATORY PITSTOPS *</label>
+              <input id="stops" type="number" min="0" placeholder="--" value="" />
             </div>
           </div>
 
@@ -1041,28 +1036,28 @@
       <div class="pane-form">
         <div class="form-grid zone-in">
           <div class="field">
-            <label>AMBIENT TEMP // BEFORE °C *</label>
-            <input id="tempBefore" type="number" value="" />
+            <label for="tempBefore" id="lblTempBefore">AMBIENT TEMP // BEFORE °C</label>
+            <input id="tempBefore" type="number" placeholder="--" value="" />
           </div>
           <div class="field">
-            <label>AMBIENT TEMP // AFTER °C *</label>
-            <input id="tempAfter" type="number" value="" />
+            <label for="tempAfter" id="lblTempAfter">AMBIENT TEMP // AFTER °C</label>
+            <input id="tempAfter" type="number" placeholder="--" value="" />
           </div>
           <div class="field">
-            <label>FRONT DUCT // BEFORE</label>
-            <input id="frontBefore" type="number" min="0" value="" />
+            <label for="frontBefore" id="lblFrontBefore">FRONT DUCT // BEFORE</label>
+            <input id="frontBefore" type="number" min="0" placeholder="0" value="" />
           </div>
           <div class="field">
-            <label>FRONT DUCT // AFTER</label>
-            <input id="frontAfter" type="number" min="0" value="" />
+            <label for="frontAfter" id="lblFrontAfter">FRONT DUCT // AFTER</label>
+            <input id="frontAfter" type="number" min="0" placeholder="0" value="" />
           </div>
           <div class="field">
-            <label>REAR DUCT // BEFORE</label>
-            <input id="rearBefore" type="number" min="0" value="" />
+            <label for="rearBefore" id="lblRearBefore">REAR DUCT // BEFORE</label>
+            <input id="rearBefore" type="number" min="0" placeholder="0" value="" />
           </div>
           <div class="field">
-            <label>REAR DUCT // AFTER</label>
-            <input id="rearAfter" type="number" min="0" value="" />
+            <label for="rearAfter" id="lblRearAfter">REAR DUCT // AFTER</label>
+            <input id="rearAfter" type="number" min="0" placeholder="0" value="" />
           </div>
         </div>
 
@@ -1086,7 +1081,7 @@
             <div class="tyre-pos">FL // FRONT LEFT *</div>
             <div class="tyre-before zone-in">
               <label class="tyre-label" for="fl">BEFORE</label>
-              <input class="field tyre-input" id="fl" type="number" step="0.1" value="" />
+              <input class="field tyre-input" id="fl" type="number" step="0.1" placeholder="--.-" value="" />
             </div>
             <div class="tyre-divider"></div>
             <div class="tyre-after zone-out">
@@ -1101,7 +1096,7 @@
             <div class="tyre-pos">FR // FRONT RIGHT *</div>
             <div class="tyre-before zone-in">
               <label class="tyre-label" for="fr">BEFORE</label>
-              <input class="field tyre-input" id="fr" type="number" step="0.1" value="" />
+              <input class="field tyre-input" id="fr" type="number" step="0.1" placeholder="--.-" value="" />
             </div>
             <div class="tyre-divider"></div>
             <div class="tyre-after zone-out">
@@ -1116,7 +1111,7 @@
             <div class="tyre-pos">RL // REAR LEFT *</div>
             <div class="tyre-before zone-in">
               <label class="tyre-label" for="rl">BEFORE</label>
-              <input class="field tyre-input" id="rl" type="number" step="0.1" value="" />
+              <input class="field tyre-input" id="rl" type="number" step="0.1" placeholder="--.-" value="" />
             </div>
             <div class="tyre-divider"></div>
             <div class="tyre-after zone-out">
@@ -1131,7 +1126,7 @@
             <div class="tyre-pos">RR // REAR RIGHT *</div>
             <div class="tyre-before zone-in">
               <label class="tyre-label" for="rr">BEFORE</label>
-              <input class="field tyre-input" id="rr" type="number" step="0.1" value="" />
+              <input class="field tyre-input" id="rr" type="number" step="0.1" placeholder="--.-" value="" />
             </div>
             <div class="tyre-divider"></div>
             <div class="tyre-after zone-out">
@@ -1395,7 +1390,36 @@
       document.getElementById(id).classList.add("error");
     }
 
+    function updatePressureMandatoryLabels() {
+      const tb = document.getElementById("tempBefore")?.value.trim();
+      const ta = document.getElementById("tempAfter")?.value.trim();
+      const fb = document.getElementById("frontBefore")?.value.trim();
+      const fa = document.getElementById("frontAfter")?.value.trim();
+      const rb = document.getElementById("rearBefore")?.value.trim();
+      const ra = document.getElementById("rearAfter")?.value.trim();
+
+      const tempActive = tb !== "" || ta !== "";
+      const frontActive = fb !== "" || fa !== "";
+      const rearActive = rb !== "" || ra !== "";
+
+      const setLabel = (id, base, isMandatory) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `${base}${isMandatory ? " *" : ""}`;
+      };
+
+      // Starts with NO mandatory asterisks across the condition fields.
+      // Whenever a value is entered into a pair (temp, front duct, or rear duct),
+      // both Before and After for that pair become mandatory (*).
+      setLabel("lblTempBefore", "AMBIENT TEMP // BEFORE °C", tempActive);
+      setLabel("lblTempAfter", "AMBIENT TEMP // AFTER °C", tempActive);
+      setLabel("lblFrontBefore", "FRONT DUCT // BEFORE", frontActive);
+      setLabel("lblFrontAfter", "FRONT DUCT // AFTER", frontActive);
+      setLabel("lblRearBefore", "REAR DUCT // BEFORE", rearActive);
+      setLabel("lblRearAfter", "REAR DUCT // AFTER", rearActive);
+    }
+
     function checkResetState() {
+      updatePressureMandatoryLabels();
       const isResult = screenEl && screenEl.dataset.lcd === "result";
 
       const fuelInputs = Array.from(document.querySelectorAll("#fuel input"));
@@ -1419,22 +1443,26 @@
     // Text lines for the inputs of the given fuel mode (only the parameters
     // that mode actually uses), captured when a calculation is made
     function buildFuelInputsText(mode) {
-      const v = (id) => document.getElementById(id).value || 0;
+      const v = (id) => document.getElementById(id).value;
+      const marginVal = (id) => {
+        const val = document.getElementById(id).value;
+        return val === "" ? "5" : val;
+      };
       const lines = [];
       if (mode === "normal") {
-        lines.push(`- Race Duration: ${v("hours")}h ${v("minutes")}m`);
-        lines.push(`- Lap Pace: ${v("lapMin")}m ${v("lapSec")}s`);
+        lines.push(`- Race Duration: ${v("hours") || 0}h ${v("minutes") || 0}m`);
+        lines.push(`- Lap Pace: ${v("lapMin") || 0}m ${v("lapSec") || 0}s`);
         lines.push(
-          `- Fuel per Lap: ${parseFloat(v("normalFuel")).toFixed(2)} L`,
+          `- Fuel per Lap: ${parseFloat(v("normalFuel") || 0).toFixed(2)} L`,
         );
-        lines.push(`- Safety Margin: ${v("margin")}%`);
+        lines.push(`- Safety Margin: ${marginVal("margin")}%`);
       } else {
-        lines.push(`- Race Duration: ${v("proHours")}h ${v("proMinutes")}m`);
-        lines.push(`- Lap Pace: ${v("proLapMin")}m ${v("proLapSec")}s`);
+        lines.push(`- Race Duration: ${v("proHours") || 0}h ${v("proMinutes") || 0}m`);
+        lines.push(`- Lap Pace: ${v("proLapMin") || 0}m ${v("proLapSec") || 0}s`);
         lines.push(
-          `- Fuel per Lap: ${parseFloat(v("proFuel")).toFixed(2)} L`,
+          `- Fuel per Lap: ${parseFloat(v("proFuel") || 0).toFixed(2)} L`,
         );
-        lines.push(`- Safety Margin: ${v("proMargin")}%`);
+        lines.push(`- Safety Margin: ${marginVal("proMargin")}%`);
         if (n("tank") > 0) lines.push(`- Tank Capacity: ${n("tank")} L`);
         if (n("stops") > 0) lines.push(`- Mandatory Stops: ${n("stops")}`);
         const extra = [
@@ -1496,7 +1524,7 @@
             laps = Math.ceil(raceSeconds / lapSeconds);
             fuel = parseFloat(fStr);
             const m = n("margin");
-            margin = isNaN(m) ? 0 : m;
+            margin = isNaN(m) ? 5 : m;
           }
         }
       }
@@ -1505,6 +1533,8 @@
         const raceSeconds = getPair("proHours", 3600, "proMinutes", 60);
         const lapSeconds = getPair("proLapMin", 60, "proLapSec", 1);
         const fStr = document.getElementById("proFuel").value;
+        const tankStr = document.getElementById("tank").value;
+        const stopsStr = document.getElementById("stops").value;
 
         if (raceSeconds === null) {
           markError("proHours");
@@ -1518,6 +1548,14 @@
         }
         if (fStr === "") {
           markError("proFuel");
+          hasError = true;
+        }
+        if (tankStr === "" || parseFloat(tankStr) <= 0) {
+          markError("tank");
+          hasError = true;
+        }
+        if (stopsStr === "" || parseInt(stopsStr) < 0) {
+          markError("stops");
           hasError = true;
         }
 
@@ -1538,7 +1576,7 @@
             if (document.getElementById("cooldown").checked) laps++;
             fuel = parseFloat(fStr);
             const m = n("proMargin");
-            margin = isNaN(m) ? 0 : m;
+            margin = isNaN(m) ? 5 : m;
           }
         }
       }
@@ -1677,12 +1715,55 @@
       clearErrors("pressures");
       let hasError = false;
 
-      ["tempBefore", "tempAfter", "fl", "fr", "rl", "rr"].forEach((id) => {
+      // 4 cold pressures are always mandatory
+      ["fl", "fr", "rl", "rr"].forEach((id) => {
         if (isNaN(n(id))) {
           markError(id);
           hasError = true;
         }
       });
+
+      const tb = n("tempBefore");
+      const ta = n("tempAfter");
+      const fb = n("frontBefore");
+      const fa = n("frontAfter");
+      const rb = n("rearBefore");
+      const ra = n("rearAfter");
+
+      const hasTempBefore = !isNaN(tb);
+      const hasTempAfter = !isNaN(ta);
+      if (hasTempBefore !== hasTempAfter) {
+        if (!hasTempBefore) markError("tempBefore");
+        if (!hasTempAfter) markError("tempAfter");
+        hasError = true;
+      }
+
+      const hasFrontBefore = !isNaN(fb);
+      const hasFrontAfter = !isNaN(fa);
+      if (hasFrontBefore !== hasFrontAfter) {
+        if (!hasFrontBefore) markError("frontBefore");
+        if (!hasFrontAfter) markError("frontAfter");
+        hasError = true;
+      }
+
+      const hasRearBefore = !isNaN(rb);
+      const hasRearAfter = !isNaN(ra);
+      if (hasRearBefore !== hasRearAfter) {
+        if (!hasRearBefore) markError("rearBefore");
+        if (!hasRearAfter) markError("rearAfter");
+        hasError = true;
+      }
+
+      const hasAnyCondition =
+        (hasTempBefore && hasTempAfter) ||
+        (hasFrontBefore && hasFrontAfter) ||
+        (hasRearBefore && hasRearAfter);
+
+      if (!hasAnyCondition && !hasError) {
+        markError("tempBefore");
+        markError("tempAfter");
+        hasError = true;
+      }
 
       if (hasError) {
         ["fl", "fr", "rl", "rr"].forEach((id) => {
@@ -1694,8 +1775,8 @@
         return;
       }
 
-      const tempDelta = n("tempAfter") - n("tempBefore");
-      const tempComp = -0.1 * tempDelta;
+      const tempComp =
+        hasTempBefore && hasTempAfter ? -0.1 * (ta - tb) : 0;
 
       function ductDelta(before, after) {
         if (isNaN(before) || isNaN(after) || before === after) return 0;
@@ -1709,8 +1790,8 @@
         return before > after ? delta : -delta;
       }
 
-      const frontComp = ductDelta(n("frontBefore"), n("frontAfter"));
-      const rearComp = ductDelta(n("rearBefore"), n("rearAfter"));
+      const frontComp = ductDelta(fb, fa);
+      const rearComp = ductDelta(rb, ra);
 
       const values = {
         fl: n("fl") + tempComp + frontComp,
