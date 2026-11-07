@@ -2,7 +2,8 @@
 
 RaceNG is a strategic sim racing assistant designed for Assetto Corsa Competizione. It helps you calculate optimal fuel loads with multi-mode support (Basic, Normal, and Pro) and adjust your tyre setup pressures based on ambient temperature and brake duct changes to consistently hit your target operating pressures.
 
-## Pronunciation & Name Origin
+The interface replicates the look and behaviour of a motorsport LCD dash display: a monochrome backlit screen with segment-style digits, lit and unlit zones that fade depending on what you are doing, a power-on splash screen, and a switchable backlight (day/night) toggled with the headlights button.
+
 "RaceNG" is pronounced like **"Race Eng"**, a pun on **"Race Engineer"** — the person on the pit wall who crunches the numbers so you can focus on driving.
 
 ## Architecture
@@ -25,7 +26,7 @@ Three dedicated calculation modes to plan your race with optimal efficiency:
 - **Pro Mode (Advanced)**: Comprehensive strategy engine incorporating tank capacity, mandatory pitstops, safety margin, and specialized lap options (Formation lap, Cool-down lap). Highlights include:
   - **Greedy Maximum-Stint Strategy (`mandStops = 0`)**: Calculates strategy by filling the tank to 100% capacity (safe maximum integer laps) for all initial stints, leaving only the exact remaining fuel required to finish the race in the final stint.
   - **Equal-Split Strategy (`mandStops > 0`)**: Distributes laps as evenly as possible across the stints while mathematically guaranteeing that no stint ever exceeds the physical tank capacity.
-  - **Interactive Pitstop Schedule**: Renders results inside a card grid showing exact stint lap ranges, stint fuel targets, and a glowing Total Fuel summary card with total laps computed.
+  - **Interactive Pitstop Schedule**: Renders results as a grid of stint cards showing each stint's fuel target and lap count, next to the total fuel and total laps. Exact lap ranges per stint are included when you copy the strategy.
 
 ### Tyre Pressures Calculator
 Calculate adjusted cold tyre pressures based on ambient weather shifts and brake duct configurations:
